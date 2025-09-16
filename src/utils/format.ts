@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BigNumber from 'bignumber.js';
-import { format as fd } from 'date-fns';
+import { format as fd, format } from 'date-fns';
 import { FormatNumberOptions } from 'src/global.config';
 import { isNumeric } from '.';
+import { Time } from 'highcharts';
+import { TRange } from 'src/views/farming/Graph/GraphSection';
 
 /**
  *
@@ -143,4 +145,64 @@ export function decimalFlood(num: string | number, precision: number) {
     const _precision = BigNumber('10').pow(precision);
     const _bigNumber = BigNumber(num).multipliedBy(_precision);
     return _bigNumber.integerValue(BigNumber.ROUND_FLOOR).div(_precision).toFixed();
+}
+
+export function highchartDateFormat(timestamp?: number | undefined, format?: string | undefined): string {
+    return new Time({ timezone: 'UTC' }).dateFormat(format ? format : '%b %e, %Y, %I:%M %p (UTC)', timestamp);
+}
+
+export function timeAgo(transactionTimestamp: number) {
+    const currentTime = Math.floor(Date.now() / 1000);
+    const secondsDiff = currentTime - transactionTimestamp;
+
+    const formatTime = (value: number, unit: string) => {
+        return `${value} ${unit}${value === 1 ? '' : 's'} ago`;
+    };
+
+    if (secondsDiff < 60) {
+        return 'just now';
+    }
+    const minutesAgo = Math.floor(secondsDiff / 60);
+    if (minutesAgo < 60) {
+        return formatTime(minutesAgo, 'minute');
+    }
+    const hoursAgo = Math.floor(minutesAgo / 60);
+    if (hoursAgo < 24) {
+        return formatTime(hoursAgo, 'hour');
+    }
+    const daysAgo = Math.floor(hoursAgo / 24);
+    if (daysAgo < 7) {
+        return formatTime(daysAgo, 'day');
+    }
+    const weeksAgo = Math.floor(daysAgo / 7);
+    if (weeksAgo < 4) {
+        return formatTime(weeksAgo, 'week');
+    }
+    const monthsAgo = Math.floor(daysAgo / 30);
+    if (monthsAgo < 12) {
+        if (monthsAgo === 0 && weeksAgo >= 4) {
+            return formatTime(weeksAgo, 'week');
+        }
+        return formatTime(monthsAgo, 'month');
+    }
+    const yearsAgo = Math.floor(daysAgo / 365);
+    return formatTime(yearsAgo, 'year');
+}
+
+export function formatUTCTimestamp(timestamp: number, range: TRange): string {
+    const date = new Date(timestamp);
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
+    switch (range.value) {
+        case '1':
+            return format(utcDate, 'h aaa');
+        case '7':
+            return format(utcDate, 'MMM dd');
+        case '30':
+            return format(utcDate, 'MMM dd');
+        case '90':
+            return format(utcDate, 'MMM dd');
+        default:
+            return format(utcDate, 'Pp');
+    }
 }

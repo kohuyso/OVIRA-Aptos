@@ -3,6 +3,14 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
     output: 'standalone',
     eslint: { ignoreDuringBuilds: true },
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://131.153.239.187:8124/:path*',
+            },
+        ];
+    },
     images: {
         remotePatterns: [
             {

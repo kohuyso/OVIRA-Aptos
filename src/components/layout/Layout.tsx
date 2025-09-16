@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import Header from './header/Header';
 import Sidebar from './Sidebar';
@@ -9,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Header />
             <Sidebar />
             <main className="pt-16 pl-64">
-                <div className="p-6">{children}</div>
+                <div className="p-4">{children}</div>
             </main>
             <ModalCustom />
         </div>

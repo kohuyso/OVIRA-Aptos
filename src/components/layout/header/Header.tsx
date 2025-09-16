@@ -1,7 +1,10 @@
+'use client';
 import React from 'react';
 import ButtonToggleMode from '../../toggle-mode/ButtonToggleMode';
 import { CryptoIcon } from '../../crypto-icons';
 import ConnectWalletSection from './ConnectWalletSection';
+import { ChevronDown } from 'lucide-react';
+import { Button } from 'shadcn/button';
 
 export default function Header() {
     return (
@@ -12,10 +15,11 @@ export default function Header() {
                 </div>
                 <div className="w-1/2 h-full flex items-center justify-end gap-2">
                     <ButtonToggleMode />
-                    <div className="border border-border rounded-md px-2 py-1 flex items-center gap-2">
+                    <Button size="lg" variant="text">
                         <CryptoIcon name="SOL" size={20} />
                         <p>Solana</p>
-                    </div>
+                        <ChevronDown className="w-5 h-5" />
+                    </Button>
                     <ConnectWalletSection />
                 </div>
             </div>

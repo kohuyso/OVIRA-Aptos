@@ -1,0 +1,1084 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Vault Management API",
+        "description": "API for managing and interacting with vaults.",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/vault/create_vault": {
+            "post": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Create Vault",
+                "description": "Create a new vault.\n\n- Query/body params: `vault_name` (str), `owner_wallet_address` (str), `asset` (str), `risk_label` (str).\n- Optional: `update_frequency` (float, hours, default 6.0), `policy_prompt` (str | None).\n- Success: returns `SuccessResponse` (200) when vault is created.\n- Errors: 500 on failure.",
+                "operationId": "create_vault_vault_create_vault_post",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "owner_wallet_address",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Owner Wallet Address"
+                        }
+                    },
+                    {
+                        "name": "asset",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "enum": [
+                                "USDT",
+                                "USDC"
+                            ],
+                            "type": "string",
+                            "title": "Asset"
+                        }
+                    },
+                    {
+                        "name": "risk_label",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "enum": [
+                                "conservative",
+                                "balanced",
+                                "aggressive"
+                            ],
+                            "type": "string",
+                            "title": "Risk Label"
+                        }
+                    },
+                    {
+                        "name": "update_frequency",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 6,
+                            "title": "Update Frequency"
+                        }
+                    },
+                    {
+                        "name": "policy_prompt",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Policy Prompt"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/update_vault_policy": {
+            "post": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Update Vault Policy",
+                "description": "Update a vault's policy parameters.\n\n- Query params: `vault_name` (str), optional `new_update_frequency` (float), `new_policy_prompt` (str).\n- Success: returns `SuccessResponse` (200) when updated.\n- Errors: 404 if vault not found, 500 on other failures.",
+                "operationId": "update_vault_policy_vault_update_vault_policy_post",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "new_update_frequency",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "New Update Frequency"
+                        }
+                    },
+                    {
+                        "name": "new_policy_prompt",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "New Policy Prompt"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/apy": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Vault Apy",
+                "description": "Retrieve the latest APY for a vault.\n\n- Query params: `vault_name` (str).\n- Success: returns a float - the latest APY for the vault.\n- Errors: 404 if vault not found, 500 on other failures.",
+                "operationId": "get_vault_apy_vault_apy_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number",
+                                    "title": "Response Get Vault Apy Vault Apy Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/tvl": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Vault Tvl",
+                "description": "Retrieve the latest TVL for a vault.\n\n- Query params: `vault_name` (str).\n- Success: returns a float - the latest TVL for the vault.\n- Errors: 404 if no snapshot found, 500 on other failures.",
+                "operationId": "get_vault_tvl_vault_tvl_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number",
+                                    "title": "Response Get Vault Tvl Vault Tvl Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/apy_chart": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Apy Chart",
+                "description": "Retrieve the APY time series for a vault.\n\n- Query params: `vault_name` (str), optional `days` (int, default 30).\n- Success: returns a list of (datetime, float) tuples for APY over time.\n- Errors: 404 if no data found, 500 on other failures.",
+                "operationId": "get_apy_chart_vault_apy_chart_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Days"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            {
+                                                "type": "number"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                    },
+                                    "title": "Response Get Apy Chart Vault Apy Chart Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/tvl_chart": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Tvl Chart",
+                "description": "Retrieve the TVL time series for a vault.\n\n- Query params: `vault_name` (str), optional `days` (int, default 30).\n- Success: returns a list of (datetime, float) tuples for TVL over time.\n- Errors: 404 if no data found, 500 on other failures.",
+                "operationId": "get_tvl_chart_vault_tvl_chart_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Days"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                            {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            {
+                                                "type": "number"
+                                            }
+                                        ],
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                    },
+                                    "title": "Response Get Tvl Chart Vault Tvl Chart Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/allocations": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Vault Allocations",
+                "description": "Retrieve allocation details for a vault.\n\n- Query params: `vault_name` (str).\n- Success: returns a list of `PoolAllocation` models (pool_name: str, weight_pct: float).\n- Errors: 404 if no allocation data found, 500 on other failures.",
+                "operationId": "get_vault_allocations_vault_allocations_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PoolAllocation"
+                                    },
+                                    "title": "Response Get Vault Allocations Vault Allocations Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/recent_action": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Strategy Updated History",
+                "description": "Retrieve the vault's strategy update history.\n\n- Query params: `vault_name` (str), optional `days` (int, default 30).\n- Success: returns a list of `VaultStrategyUpdatedInfo` entries (timestamp: datetime, action: str, details: str).\n- Errors: 404 if no history found, 500 on other failures.",
+                "operationId": "get_strategy_updated_history_vault_recent_action_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 3,
+                            "title": "Days"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/VaultStrategyUpdatedInfo"
+                                    },
+                                    "title": "Response Get Strategy Updated History Vault Recent Action Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/ai_reasoning_trace": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Vault Reasoning Trace",
+                "description": "Retrieve the vault's strategy reasoning trace.\n\n- Query params: `vault_name` (str)\n- Success: returns a list of `ReasoningTrace` entries (role: str, content: str).\n- Errors: 404 if no history found, 500 on other failures.",
+                "operationId": "get_vault_reasoning_trace_vault_ai_reasoning_trace_get",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReasoningTrace"
+                                    },
+                                    "title": "Response Get Vault Reasoning Trace Vault Ai Reasoning Trace Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vault/existing_vaults": {
+            "get": {
+                "tags": [
+                    "vault"
+                ],
+                "summary": "Get Existing Vaults",
+                "description": "Get list of existing vault. Return list[str] is list of vaults's name",
+                "operationId": "get_existing_vaults_vault_existing_vaults_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Existing Vaults Vault Existing Vaults Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/create_user": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create User",
+                "description": "Create a new user record.\n\n- Query/body: `user_wallet` (str) — wallet address to register.\n- Success: returns `SuccessResponse` (200) on successful creation.\n- Errors: 404 if related resources are missing, 500 on server errors.",
+                "operationId": "create_user_user_create_user_post",
+                "parameters": [
+                    {
+                        "name": "user_wallet",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Wallet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/balance/net_value": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Balance Net Value",
+                "description": "Get a user's balance NAV (Net Asset Value) for a given vault.\n\n- Query params: `user_wallet` (str), `vault_name` (str).\n- Success: returns a float representing the user's balance NAV in the vault.\n- Errors: 404 if the user or vault is not found, 500 on other failures.",
+                "operationId": "get_user_balance_net_value_user_balance_net_value_get",
+                "parameters": [
+                    {
+                        "name": "user_wallet",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Wallet"
+                        }
+                    },
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number",
+                                    "title": "Response Get User Balance Net Value User Balance Net Value Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/balance/earnings": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Balance Earnings",
+                "description": "Get a user's balance earnings for a given vault.\n\n- Query params: `user_wallet` (str), `vault_name` (str).\n- Success: returns a float representing the user's balance earnings in the vault.\n- Errors: 404 if the user or vault is not found, 500 on other failures.",
+                "operationId": "get_user_balance_earnings_user_balance_earnings_get",
+                "parameters": [
+                    {
+                        "name": "user_wallet",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Wallet"
+                        }
+                    },
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number",
+                                    "title": "Response Get User Balance Earnings User Balance Earnings Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transaction/deposit": {
+            "post": {
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Deposit",
+                "description": "Deposit funds into a vault.\n\n- Query params: `vault_name` (str), `amount` (float), `user_wallet` (str).\n- Success: returns `SuccessResponse` with a confirmation message (200).\n- Errors: 404 if referenced resources are missing, 500 on other failures.",
+                "operationId": "deposit_transaction_deposit_post",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "title": "Amount"
+                        }
+                    },
+                    {
+                        "name": "user_wallet",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Wallet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transaction/withdraw": {
+            "post": {
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Withdraw",
+                "description": "Withdraw funds from a vault.\n\n- Query params: `vault_name` (str), `amount` (float), `user_wallet` (str).\n- Success: returns `SuccessResponse` confirming the withdrawal (200).\n- Errors: 404 if resources are missing, 500 on other failures.",
+                "operationId": "withdraw_transaction_withdraw_post",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "title": "Amount"
+                        }
+                    },
+                    {
+                        "name": "user_wallet",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Wallet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/strategy/update_vault_strategy": {
+            "post": {
+                "tags": [
+                    "strategy"
+                ],
+                "summary": "Update Vault Strategy",
+                "description": "Update a vault's strategy.\n\n- Request body: `strategy` (mongo.schemas.StrategyInfo) — the new strategy payload.\n- Query/path: `vault_name` (str) — vault identifier to update.\n\nResponses:\n- 200: `SuccessResponse` when the strategy is updated successfully.\n- 404: when the referenced resource is not found.\n- 500: on unexpected server errors.",
+                "operationId": "update_vault_strategy_strategy_update_vault_strategy_post",
+                "parameters": [
+                    {
+                        "name": "vault_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vault Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StrategyInfo"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "PoolAllocation": {
+                "properties": {
+                    "pool_name": {
+                        "type": "string",
+                        "title": "Pool Name"
+                    },
+                    "weight_pct": {
+                        "type": "number",
+                        "title": "Weight Pct"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "pool_name",
+                    "weight_pct"
+                ],
+                "title": "PoolAllocation"
+            },
+            "ReasoningTrace": {
+                "properties": {
+                    "role": {
+                        "type": "string",
+                        "title": "Role"
+                    },
+                    "content": {
+                        "type": "string",
+                        "title": "Content"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "role",
+                    "content"
+                ],
+                "title": "ReasoningTrace"
+            },
+            "Strategy": {
+                "properties": {
+                    "risk_label": {
+                        "type": "string",
+                        "title": "Risk Label"
+                    },
+                    "allocations": {
+                        "items": {
+                            "$ref": "#/components/schemas/PoolAllocation"
+                        },
+                        "type": "array",
+                        "title": "Allocations"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "risk_label",
+                    "allocations"
+                ],
+                "title": "Strategy"
+            },
+            "StrategyInfo": {
+                "properties": {
+                    "strategy": {
+                        "$ref": "#/components/schemas/Strategy"
+                    },
+                    "reasoning_trace": {
+                        "items": {
+                            "$ref": "#/components/schemas/ReasoningTrace"
+                        },
+                        "type": "array",
+                        "title": "Reasoning Trace"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "strategy",
+                    "reasoning_trace"
+                ],
+                "title": "StrategyInfo"
+            },
+            "SuccessResponse": {
+                "properties": {
+                    "status_code": {
+                        "type": "integer",
+                        "title": "Status Code"
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status_code",
+                    "message"
+                ],
+                "title": "SuccessResponse"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "VaultStrategyUpdatedInfo": {
+                "properties": {
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Timestamp"
+                    },
+                    "action": {
+                        "type": "string",
+                        "title": "Action"
+                    },
+                    "details": {
+                        "type": "string",
+                        "title": "Details"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "timestamp",
+                    "action",
+                    "details"
+                ],
+                "title": "VaultStrategyUpdatedInfo"
+            }
+        }
+    }
+}

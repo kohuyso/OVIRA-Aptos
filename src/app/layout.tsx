@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { Geist_Mono, Mulish } from 'next/font/google';
+import { Geist_Mono, Inter_Tight } from 'next/font/google';
 import './globals.css';
 import { BugIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -9,8 +9,9 @@ import JotaiProvider from 'src/components/providers/jotai-provider/JotaiProvider
 import { ToastContainer } from 'react-toastify';
 import { KEYWORD, SITE_DESCRIPTION, SITE_TITLE, SITE_URL, THUMBNAIL } from 'src/constant/metadata';
 import SolanaProvider from 'src/components/providers/solana-provider/SolanaProvider';
+import ReactQueryProvider from 'src/components/providers/react-query/ReactQueryProvider';
 
-const mulish = Mulish({
+const interTight = Inter_Tight({
     subsets: ['latin'],
     display: 'swap',
 });
@@ -96,10 +97,12 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body suppressHydrationWarning className={`${mulish.className} ${geistMono.variable} antialiased`}>
+            <body suppressHydrationWarning className={`${interTight.className} ${geistMono.variable} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
                     <JotaiProvider>
-                        <SolanaProvider>{children}</SolanaProvider>
+                        <ReactQueryProvider>
+                            <SolanaProvider>{children}</SolanaProvider>
+                        </ReactQueryProvider>
                     </JotaiProvider>
                     {process.env.NODE_ENV === 'development' && (
                         <div style={{ position: 'fixed', bottom: 16, right: 16, cursor: 'pointer' }}>

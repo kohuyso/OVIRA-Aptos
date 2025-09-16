@@ -5,7 +5,7 @@ import { useModalFunction } from 'src/states/modal/modal';
 import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
 import { formatAddress } from 'src/utils/format';
 import ModalConnectWallet from './ModalConnectWallet';
-import { Copy, LoaderCircle } from 'lucide-react';
+import { ChevronDown, Copy, LoaderCircle } from 'lucide-react';
 import { copyTextToClipboard } from 'src/utils';
 import Image from 'next/image';
 
@@ -17,19 +17,20 @@ export default function ConnectWalletSection() {
             {status === 'Connected' ? (
                 <Popover>
                     <PopoverTrigger asChild>
-                        <Button>
+                        <Button size="lg" variant="text">
                             <Image src={walletIcon} alt={walletName} width={24} height={24} />
                             {formatAddress(address)}
+                            <ChevronDown className="w-5 h-5" />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-48 flex flex-col gap-2">
                         <div className="flex items-center justify-between">
                             {formatAddress(address)}
                             <Copy
-                                className="w-4 h-4"
+                                className="w-5 h-5 cursor-pointer"
                                 onClick={() =>
                                     copyTextToClipboard(address, {
-                                        autoClose: 1000,
+                                        autoClose: 500,
                                         position: 'top-right',
                                     })
                                 }
@@ -38,9 +39,14 @@ export default function ConnectWalletSection() {
                         <Button onClick={disconnect}>Disconnect</Button>
                     </PopoverContent>
                 </Popover>
+            ) : status == 'Connecting' ? (
+                <Button size="lg" className="min-w-36" disabled>
+                    <LoaderCircle className="w-5 h-5 animate-spin" />
+                    Connecting
+                </Button>
             ) : (
-                <Button className="min-w-36" onClick={() => openModal({ title: 'Connect Wallet', content: <ModalConnectWallet onClose={closeModal} /> })}>
-                    {status === 'Connecting' ? <LoaderCircle className="w-4 h-4 animate-spin" /> : 'Connect Wallet'}
+                <Button size="lg" className="min-w-36" onClick={() => openModal({ title: 'Connect Wallet', content: <ModalConnectWallet onClose={closeModal} /> })}>
+                    Connect Wallet
                 </Button>
             )}
         </>
