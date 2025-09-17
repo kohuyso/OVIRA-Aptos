@@ -1,6 +1,7 @@
 import { Card, CardContent, CardTitle } from 'shadcn/card';
 import useQueryReasoningTrace from 'src/hooks/useQueryFarming/useQueryReasoningTrace';
 import StatusCheckQuery from 'src/components/status/StatusCheckQuery';
+import Image from 'next/image';
 
 export default function ReasoningTrace() {
     const { data: traces, status } = useQueryReasoningTrace();
@@ -19,7 +20,7 @@ export default function ReasoningTrace() {
                             <div className="flex flex-col">
                                 {[...new Set(traces.map((t) => t.role))].map((role) => (
                                     <div key={role} className="flex items-center gap-3 py-2">
-                                        <div className="w-8 h-8 rounded-full bg-muted border" />
+                                        <Image src={`/imgs/ai-agent/${role}.png`} alt={role} width={32} height={32} className="rounded-full" />
                                         <div className="text-sm font-medium capitalize">{role}</div>
                                     </div>
                                 ))}
@@ -29,7 +30,7 @@ export default function ReasoningTrace() {
                             <div className="flex flex-col gap-4 p-3 pr-20">
                                 {traces.map((item, idx) => (
                                     <div key={`${item.role}-${idx}`} className="flex items-end gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-muted border flex-shrink-0" />
+                                        <Image src={`/imgs/ai-agent/${item.role}.png`} alt={item.role} width={40} height={40} className="rounded-full flex-shrink-0" />
                                         <div className="flex-1">
                                             <div className="bg-popover px-3 py-2 rounded-md">
                                                 <p className="text-sm font-semibold text-foreground capitalize">{item.role}</p>

@@ -59,7 +59,7 @@ export default function ChartsSection() {
                     const data = this as any;
                     return `<div>
                                 <span style="color: #8D8D8D;font-size: 12px;">${data.point.name}: </span>
-                                <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, prefix: '$' })}</span>
+                                <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, suffix: '%' })}</span>
                             </div>`;
                 },
             },
@@ -83,7 +83,7 @@ export default function ChartsSection() {
                             </div>
                             <div style="display: flex; align-items: center; gap: 4px;">
                                 <span style="color: #F4F4F4; font-size: 12px;"> 
-                                    ${formatNumber(data.options.y as number, { fractionDigits: 2, prefix: '$' })}
+                                    ${formatNumber(data.options.y as number, { fractionDigits: 2, suffix: '%' })}
                                 </span>
                             </div>
                     </div>

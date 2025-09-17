@@ -8,10 +8,24 @@ import ModalConnectWallet from './ModalConnectWallet';
 import { ChevronDown, Copy, LoaderCircle } from 'lucide-react';
 import { copyTextToClipboard } from 'src/utils';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
+import { createUser } from 'src/lib/api';
 
 export default function ConnectWalletSection() {
     const { address, status, walletIcon, walletName, disconnect } = useSummarySolanaConnect();
     const { openModal, closeModal } = useModalFunction();
+
+    const createdAddressesRef = useRef<Set<string>>(new Set());
+
+    useEffect(() => {
+        if (status === 'Connected' && address) {
+            if (createdAddressesRef.current.has(address)) return;
+            createdAddressesRef.current.add(address);
+            createUser(address).catch((err) => {
+                console.error('Failed to create user for wallet', address, err);
+            });
+        }
+    }, [status, address]);
     return (
         <>
             {status === 'Connected' ? (
