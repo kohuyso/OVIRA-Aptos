@@ -13,18 +13,19 @@ import { formatNumber } from 'src/utils/format';
 export default function ChartsSection() {
     const { data: allocations, status: allocationsStatus } = useQueryAllocations();
 
-    const processedAllocations: PoolAllocation[] = useMemo(() => {
+    const processedAllocations: Array<PoolAllocation & { otherDetail?: Array<PoolAllocation> }> = useMemo(() => {
         const items = allocations || [];
         if (items.length <= 2) return items;
         const sorted = [...items].sort((a, b) => b.weight_pct - a.weight_pct);
         const topTwo = sorted.slice(0, 2);
         const otherTotal = sorted.slice(2).reduce((sum, cur) => sum + (cur.weight_pct || 0), 0);
-        return [...topTwo, { pool_name: 'Other', weight_pct: otherTotal }];
+        return [...topTwo, { pool_name: 'Other', weight_pct: otherTotal, otherDetail: sorted.slice(2) }];
     }, [allocations]);
 
     const chartData = processedAllocations.map((item) => ({
         name: item.pool_name,
         y: item.weight_pct,
+        otherDetail: item?.otherDetail,
     }));
 
     const options = useDonutChartConfig(
@@ -54,13 +55,29 @@ export default function ChartsSection() {
                 backgroundColor: '#262626',
                 borderRadius: 8,
                 useHTML: true,
+                padding: 0,
                 formatter: function () {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const data = this as any;
-                    return `<div>
-                                <span style="color: #8D8D8D;font-size: 12px;">${data.point.name}: </span>
-                                <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, suffix: '%' })}</span>
-                            </div>`;
+                    let tooltipHtml = `<div style="width: 100%; background-color: #262626; padding: 10px; border-radius: 8px;">
+                    <span style="color: #8D8D8D;font-size: 12px;">${data.point.name}: </span>
+                    <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, suffix: '%' })}</span>`;
+                    if (data.point.otherDetail) {
+                        if (data.point.otherDetail.length > 0) {
+                            tooltipHtml += data.point.otherDetail
+                                .map(
+                                    (detail: PoolAllocation) =>
+                                        `<div style="display: flex; justify-content: space-between; margin-top: 4px; gap: 10px;">
+                                            <span style="color: #8D8D8D;font-size: 12px;">${detail.pool_name}</span>
+                                            <span style="color: #F4F4F4;font-size: 12px;">${formatNumber(detail.weight_pct, { fractionDigits: 2, suffix: '%' })}</span>
+                                        </div>`
+                                )
+                                .join('');
+                        }
+                        tooltipHtml += `</div>`;
+                        return tooltipHtml;
+                    }
+                    return tooltipHtml;
                 },
             },
             legend: {

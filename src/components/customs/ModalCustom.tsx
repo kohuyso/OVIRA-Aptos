@@ -9,10 +9,9 @@ export default function ModalCustom() {
 
     return (
         <Dialog open={modal.open} onOpenChange={closeModal}>
-            <DialogTitle></DialogTitle>
-            <DialogContent>
+            <DialogContent className="w-105 max-w-md bg-card">
                 <DialogHeader>
-                    <h5>{modal.title}</h5>
+                    <DialogTitle>{modal.title}</DialogTitle>
                 </DialogHeader>
                 {modal.content}
             </DialogContent>
