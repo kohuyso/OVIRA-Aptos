@@ -15,7 +15,7 @@ export default function Header() {
                 </div>
                 <div className="w-1/2 h-full flex items-center justify-end gap-2">
                     <ButtonToggleMode />
-                    <Button size="lg" variant="text">
+                    <Button size="lg" variant="text" className="text-foreground bg-secondary">
                         <CryptoIcon name="SOL" size={20} />
                         <p>Solana</p>
                         <ChevronDown className="w-5 h-5" />

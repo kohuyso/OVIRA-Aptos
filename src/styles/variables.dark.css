@@ -1,21 +1,21 @@
 /* Dark mode CSS variables (activate by adding `.dark` on <html> or <body>) */
 
 .dark {
-    --background: #0A0A0A;
-    --foreground: #F4F4F4;
+    --background: #0a0a0a;
+    --foreground: #f4f4f4;
     --card: #161616;
     --card-foreground: oklch(0.985 0 0);
     --popover: #262626;
-    --popover-foreground: #F4F4F4;
-    --primary: #8A3FFC;
-    --primary-foreground: #F6F2FF;
+    --popover-foreground: #f4f4f4;
+    --primary: #8a3ffc;
+    --primary-foreground: #f6f2ff;
     --secondary: #262626;
-    --secondary-foreground: #8D8D8D;
+    --secondary-foreground: #8d8d8d;
     --muted: oklch(0.274 0.006 286.033);
-    --muted-foreground: #8D8D8D;
+    --muted-foreground: #8d8d8d;
     --accent: #12121314;
-    --accent-foreground: #F4F4F4;
-    --accent-border: #8A3FFC;
+    --accent-foreground: #f4f4f4;
+    --accent-border: #8a3ffc;
     --destructive: oklch(0.704 0.191 22.216);
     --border: #393939;
     --input: oklch(1 0 0 / 15%);

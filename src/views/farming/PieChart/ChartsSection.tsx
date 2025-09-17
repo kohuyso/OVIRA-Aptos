@@ -44,7 +44,7 @@ export default function ChartsSection() {
                     // borderWidth: 4,
                     center: ['50%', '50%'],
                     innerSize: '40%',
-                    borderColor: '#161616',
+                    borderColor: 'var(--card)',
                     dataLabels: {
                         enabled: false,
                     },

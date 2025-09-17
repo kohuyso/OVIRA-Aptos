@@ -25,7 +25,7 @@ export default function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`px-4 py-3 rounded-sm text-md transition-colors ${
+                            className={`mb-1 px-4 py-3 rounded-sm text-md transition-colors ${
                                 isActive ? 'bg-secondary text-foreground font-semibold' : 'text-secondary-foreground hover:bg-muted hover:text-foreground'
                             }`}
                         >
