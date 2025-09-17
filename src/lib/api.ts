@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
+import { TVault } from 'src/states/atoms/farming/farming';
 
 export type SuccessResponse = {
     status_code: number;
@@ -135,7 +136,7 @@ export async function getTvlChart(vault_name: string, days?: number): Promise<[s
 }
 
 export async function getVaultAllocations(vault_name: string): Promise<PoolAllocation[]> {
-    return requestJson<PoolAllocation[]>('/vault/allocations', { method: 'GET' }, { vault_name });
+    return requestJson<PoolAllocation[]>('/vault/pools_allocations', { method: 'GET' }, { vault_name });
 }
 
 export async function getRecentActions(vault_name: string, days?: number): Promise<VaultStrategyUpdatedInfo[]> {
@@ -146,8 +147,8 @@ export async function getVaultReasoningTrace(vault_name: string): Promise<Reason
     return requestJson<ReasoningTrace[]>('/vault/ai_reasoning_trace', { method: 'GET' }, { vault_name });
 }
 
-export async function getExistingVaults(): Promise<string[]> {
-    return requestJson<string[]>('/vault/existing_vaults', { method: 'GET' });
+export async function getExistingVaults(): Promise<TVault[]> {
+    return requestJson<TVault[]>('/vault/existing_vaults', { method: 'GET' });
 }
 
 // ------------------------- User APIs -------------------------

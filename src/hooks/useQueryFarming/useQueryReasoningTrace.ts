@@ -4,13 +4,13 @@ import { getVaultReasoningTrace, ReasoningTrace } from 'src/lib/api';
 import { useFarmingData } from 'src/states/atoms/farming/farming';
 
 export default function useQueryReasoningTrace() {
-    const { selectedVault } = useFarmingData();
+    const { selectedVaultName } = useFarmingData();
 
     return useQuery<ReasoningTrace[]>({
-        queryKey: ['reasoningTrace', selectedVault],
-        enabled: !!selectedVault,
+        queryKey: ['reasoningTrace', selectedVaultName],
+        enabled: !!selectedVaultName,
         queryFn: async () => {
-            const data = await getVaultReasoningTrace(selectedVault);
+            const data = await getVaultReasoningTrace(selectedVaultName);
             return data;
         },
         staleTime: 60 * 1000,

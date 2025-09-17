@@ -4,12 +4,12 @@ import { useFarmingData } from 'src/states/atoms/farming/farming';
 import { useQuery } from '@tanstack/react-query';
 
 export default function useQueryApyChart(days?: number) {
-    const { selectedVault } = useFarmingData();
+    const { selectedVaultName } = useFarmingData();
     return useQuery({
-        queryKey: ['apyChart', selectedVault, days],
-        enabled: !!selectedVault && !!days,
+        queryKey: ['apyChart', selectedVaultName, days],
+        enabled: !!selectedVaultName && !!days,
         queryFn: async () => {
-            const data = await getApyChart(selectedVault, days);
+            const data = await getApyChart(selectedVaultName, days);
             return data;
         },
         staleTime: 10000 * 60,

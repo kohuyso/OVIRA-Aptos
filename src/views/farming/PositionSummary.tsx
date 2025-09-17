@@ -2,10 +2,12 @@ import { Card, CardContent, CardTitle } from 'shadcn/card';
 import { CryptoIcon } from 'src/components/crypto-icons';
 import useQueryNetValue from 'src/hooks/useQueryFarming/useQueryNetValue';
 import useQueryEarnings from 'src/hooks/useQueryFarming/useQueryEarnings';
+import { useFarmingData } from 'src/states/atoms/farming/farming';
 
 export default function PositionSummary() {
     const { data: netValue, status: netValueStatus } = useQueryNetValue();
     const { data: earnings, status: earningsStatus } = useQueryEarnings();
+    const { selectedVault } = useFarmingData();
 
     return (
         <Card>
@@ -17,7 +19,7 @@ export default function PositionSummary() {
                         <span className="flex items-center gap-2">
                             <span className="font-semibold">{netValueStatus === 'success' ? netValue : '--'}</span>
                             <span className="text-muted-foreground flex items-center gap-1">
-                                <CryptoIcon name="USDC" size={20} /> USDC
+                                <CryptoIcon name={selectedVault.asset} size={20} /> {selectedVault.asset}
                             </span>
                         </span>
                     </div>
@@ -26,7 +28,7 @@ export default function PositionSummary() {
                         <span className="flex items-center gap-2">
                             <span className="font-semibold">{earningsStatus === 'success' ? earnings : '--'}</span>
                             <span className="text-muted-foreground flex items-center gap-1">
-                                <CryptoIcon name="USDC" size={20} /> USDC
+                                <CryptoIcon name={selectedVault.asset} size={20} /> {selectedVault.asset}
                             </span>
                         </span>
                     </div>

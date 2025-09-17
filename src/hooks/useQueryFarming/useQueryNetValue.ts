@@ -5,14 +5,14 @@ import { useFarmingData } from 'src/states/atoms/farming/farming';
 import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
 
 export default function useQueryEarnings() {
-    const { selectedVault } = useFarmingData();
+    const { selectedVaultName } = useFarmingData();
     const { address: userWallet } = useSummarySolanaConnect();
 
     return useQuery<number>({
-        queryKey: ['earnings', selectedVault, userWallet],
-        enabled: !!selectedVault && !!userWallet,
+        queryKey: ['earnings', selectedVaultName, userWallet],
+        enabled: !!selectedVaultName && !!userWallet,
         queryFn: async () => {
-            const data = await getUserBalanceEarnings({ user_wallet: userWallet, vault_name: selectedVault });
+            const data = await getUserBalanceEarnings({ user_wallet: userWallet, vault_name: selectedVaultName });
             return data;
         },
         staleTime: 60 * 1000,

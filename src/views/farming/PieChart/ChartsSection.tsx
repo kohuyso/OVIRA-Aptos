@@ -60,16 +60,21 @@ export default function ChartsSection() {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const data = this as any;
                     let tooltipHtml = `<div style="width: 100%; background-color: #262626; padding: 10px; border-radius: 8px;">
-                    <span style="color: #8D8D8D;font-size: 12px;">${data.point.name}: </span>
-                    <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, suffix: '%' })}</span>`;
+                    ${
+                        data.point.name === 'Other'
+                            ? `<span style="color: #8D8D8D;font-size: 12px;">Other </span>`
+                            : `<span style="color: #8D8D8D;font-size: 12px;">${data.point.name}: </span>
+                    <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, suffix: '%' })}</span>`
+                    }
+                    `;
                     if (data.point.otherDetail) {
                         if (data.point.otherDetail.length > 0) {
                             tooltipHtml += data.point.otherDetail
                                 .map(
                                     (detail: PoolAllocation) =>
                                         `<div style="display: flex; justify-content: space-between; margin-top: 4px; gap: 10px;">
-                                            <span style="color: #8D8D8D;font-size: 12px;">${detail.pool_name}</span>
-                                            <span style="color: #F4F4F4;font-size: 12px;">${formatNumber(detail.weight_pct, { fractionDigits: 2, suffix: '%' })}</span>
+                                            <span style="color: #8D8D8D;font-size: 12px;">${detail.pool_name}:</span>
+                                            <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(detail.weight_pct, { fractionDigits: 2, suffix: '%' })}</span>
                                         </div>`
                                 )
                                 .join('');
