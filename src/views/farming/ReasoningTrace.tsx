@@ -2,9 +2,17 @@ import { Card, CardContent, CardTitle } from 'shadcn/card';
 import useQueryReasoningTrace from 'src/hooks/useQueryFarming/useQueryReasoningTrace';
 import StatusCheckQuery from 'src/components/status/StatusCheckQuery';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 
 export default function ReasoningTrace() {
     const { data: traces, status } = useQueryReasoningTrace();
+    const tracesContainerRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const container = tracesContainerRef.current;
+        if (!container) return;
+        container.scrollTop = container.scrollHeight;
+    }, [traces]);
 
     return (
         <Card>
@@ -15,7 +23,7 @@ export default function ReasoningTrace() {
                         <StatusCheckQuery status={status} noData={Boolean(traces?.length == 0)} />
                     </div>
                 ) : (
-                    <div style={{ maxHeight: '300px' }} className="grid grid-cols-[120px_1fr]">
+                    <div style={{ height: '300px' }} className="grid grid-cols-[120px_1fr]">
                         <div className="overflow-y-auto border-r border-t">
                             <div className="flex flex-col">
                                 {[...new Set(traces.map((t) => t.role))].map((role) => (
@@ -26,7 +34,7 @@ export default function ReasoningTrace() {
                                 ))}
                             </div>
                         </div>
-                        <div className="h-full overflow-y-auto border-t">
+                        <div ref={tracesContainerRef} className="h-full overflow-y-auto border-t">
                             <div className="flex flex-col gap-4 p-3 pr-20">
                                 {traces.map((item, idx) => (
                                     <div key={`${item.role}-${idx}`} className="flex items-end gap-3">

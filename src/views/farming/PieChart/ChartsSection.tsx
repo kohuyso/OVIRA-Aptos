@@ -134,7 +134,11 @@ export default function ChartsSection() {
             <CardContent>
                 <CardTitle className=" mb-4 text-base">Assets Allocation</CardTitle>
                 <div style={{ height: '300px' }}>
-                    {allocationsStatus == 'success' ? <HighchartsReact highcharts={Highcharts} options={options} /> : <StatusCheckQuery status={allocationsStatus} />}
+                    {allocationsStatus == 'success' && allocations?.length > 0 ? (
+                        <HighchartsReact highcharts={Highcharts} options={options} />
+                    ) : (
+                        <StatusCheckQuery status={allocationsStatus} noData={allocations?.length == 0} />
+                    )}
                 </div>
             </CardContent>
         </Card>

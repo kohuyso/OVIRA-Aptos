@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div>
             <Header />
             <Sidebar />
-            <main className="pt-16 pl-64">
+            <main className="pt-16 pl-0 md:pl-64">
                 <div className="p-4">{children}</div>
             </main>
             <ModalCustom />

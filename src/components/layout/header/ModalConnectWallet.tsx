@@ -45,9 +45,7 @@ export default function ModalConnectWallet({ onClose }: IProps) {
                         className="group w-full flex items-center justify-between gap-3 rounded-xl border bg-card/60 hover:bg-secondary transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed px-3 py-4.5"
                     >
                         <span className="flex items-center gap-3">
-                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border bg-background">
-                                <Image src={wallet.adapter.icon} alt={wallet.adapter.name} width={20} height={20} />
-                            </span>
+                            <Image src={wallet.adapter.icon} alt={wallet.adapter.name} width={20} height={20} />
                             <span className="flex flex-col text-left">
                                 <span className="text-sm font-medium leading-none">{wallet.adapter.name}</span>
                             </span>

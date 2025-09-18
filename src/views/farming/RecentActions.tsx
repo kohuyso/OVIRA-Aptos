@@ -35,7 +35,7 @@ export default function RecentActions() {
                 <div style={{ minHeight: '100px' }} className="flex items-center justify-center">
                     <StatusCheckQuery status={recentActionsStatus} noData={Boolean(recentActions?.length == 0)} />
                     {recentActionsStatus === 'success' && recentActions.length > 0 && (
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto w-full">
                             <table className="w-full text-sm">
                                 <thead className="text-muted-foreground">
                                     <tr className="border-b">
