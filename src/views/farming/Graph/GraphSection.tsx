@@ -201,15 +201,15 @@ export default function GraphSection() {
                 </div>
                 <div className="mt-4" style={{ height: '295px' }}>
                     {chart === 'apy' ? (
-                        apyChartStatus === 'success' ? (
+                        apyChartStatus === 'success' && apyChart?.length > 0 ? (
                             <HighchartsReact key={`chart-${chart}-${days}`} highcharts={Highcharts} options={options} />
                         ) : (
-                            <StatusCheckQuery status={apyChartStatus} />
+                            <StatusCheckQuery status={apyChartStatus} noData={apyChart?.length == 0} />
                         )
-                    ) : tvlChartStatus === 'success' ? (
+                    ) : tvlChartStatus === 'success' && tvlChart?.length > 0 ? (
                         <HighchartsReact key={`chart-${chart}-${days}`} highcharts={Highcharts} options={options} />
                     ) : (
-                        <StatusCheckQuery status={tvlChartStatus} />
+                        <StatusCheckQuery status={tvlChartStatus} noData={tvlChart?.length == 0} />
                     )}
                 </div>
             </CardContent>

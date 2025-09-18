@@ -3,8 +3,13 @@ import React from 'react';
 import ButtonToggleMode from '../../toggle-mode/ButtonToggleMode';
 import { CryptoIcon } from '../../crypto-icons';
 import ConnectWalletSection from './ConnectWalletSection';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu } from 'lucide-react';
 import { Button } from 'shadcn/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from 'shadcn/dropdown-menu';
+import Link from 'next/link';
+import { MENU_ITEMS } from '../Sidebar';
+
+type MenuItem = { label: string; href: string };
 
 export default function Header() {
     return (
@@ -15,12 +20,28 @@ export default function Header() {
                 </div>
                 <div className="w-1/2 h-full flex items-center justify-end gap-2">
                     <ButtonToggleMode />
-                    <Button size="lg" variant="text" className="text-foreground bg-secondary">
+                    <Button size="lg" variant="text">
                         <CryptoIcon name="SOL" size={20} />
                         <p>Solana</p>
                         <ChevronDown className="w-5 h-5" />
                     </Button>
                     <ConnectWalletSection />
+                    <div className="md:hidden">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size="lg" variant="text" aria-label="Open menu">
+                                    <Menu className="w-5 h-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                {MENU_ITEMS.map((item: MenuItem) => (
+                                    <Link key={item.href} href={item.href}>
+                                        <DropdownMenuItem className="cursor-pointer">{item.label}</DropdownMenuItem>
+                                    </Link>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </div>
         </div>
