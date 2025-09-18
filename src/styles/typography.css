@@ -20,7 +20,7 @@
         @apply font-medium uppercase tracking-wide mobile:text-sm tablet:text-base desktop:text-lg;
     }
     p {
-        @apply text-base leading-7;
+        @apply text-[14px] leading-7;
     }
 }
 

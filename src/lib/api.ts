@@ -16,6 +16,15 @@ export type ReasoningTrace = {
     content: string;
 };
 
+export type PersonalVault = {
+    vault_name: string;
+    owner_wallet_address: string;
+    avatar_url: string | null;
+    rank: number | null;
+    apy: number | null;
+    tvl: number | null;
+};
+
 export type VaultStrategyUpdatedInfo = {
     timestamp: string; // ISO datetime string
     action: string;
