@@ -18,11 +18,9 @@ export type ReasoningTrace = {
 
 export type PersonalVault = {
     vault_name: string;
-    owner_wallet_address: string;
-    avatar_url: string | null;
-    rank: number | null;
-    apy: number | null;
-    tvl: number | null;
+    rank: number;
+    apy: number;
+    tvl: number;
 };
 
 export type VaultStrategyUpdatedInfo = {
@@ -43,6 +41,20 @@ export type StrategyInfo = {
     strategy: Strategy;
     reasoning_trace: ReasoningTrace[];
 };
+
+export type VaultsStatistics = {
+    total_tvls: number;
+    num_creators: number;
+};
+
+export type VaultLeaderboardEntry = {
+    vault_name: string;
+    apy: number;
+};
+
+export type VaultLeaderboards = Record<string, VaultLeaderboardEntry>;
+
+export type PersonalVaults = Record<string, PersonalVault>;
 
 let API_ROOT = 'http://131.153.239.187:8124';
 
@@ -160,6 +172,14 @@ export async function getExistingVaults(): Promise<TVault[]> {
     return requestJson<TVault[]>('/vault/existing_vaults', { method: 'GET' });
 }
 
+export async function getAllVaultsStatistics(): Promise<VaultsStatistics> {
+    return requestJson<VaultsStatistics>('/vault/all_vault_statistics', { method: 'GET' });
+}
+
+export async function getVaultLeaderboards(): Promise<VaultLeaderboards> {
+    return requestJson<VaultLeaderboards>('/vault/vault_leaderboards', { method: 'GET' });
+}
+
 // ------------------------- User APIs -------------------------
 
 export async function createUser(user_wallet: string): Promise<SuccessResponse> {
@@ -172,6 +192,10 @@ export async function getUserBalanceNetValue(params: { user_wallet: string; vaul
 
 export async function getUserBalanceEarnings(params: { user_wallet: string; vault_name: string }): Promise<number> {
     return requestJson<number>('/user/balance/earnings', { method: 'GET' }, params);
+}
+
+export async function getPersonalVaults(user_wallet: string): Promise<PersonalVaults> {
+    return requestJson<PersonalVaults>('/user/personal_vaults', { method: 'GET' }, { user_wallet });
 }
 
 // ---------------------- Transaction APIs ----------------------

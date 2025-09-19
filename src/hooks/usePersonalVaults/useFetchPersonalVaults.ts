@@ -1,15 +1,13 @@
+'use client';
 import { useQuery } from '@tanstack/react-query';
-import { getExistingVaults } from 'src/lib/api';
-import type { TVault } from 'src/states/atoms/farming/farming';
+import { getPersonalVaults, PersonalVaults } from 'src/lib/api';
 
 export default function useFetchPersonalVaults(userAddress: string) {
-    return useQuery<TVault[]>({
+    return useQuery<PersonalVaults>({
         queryKey: ['useFetchPersonalVaults', userAddress],
         enabled: !!userAddress,
         queryFn: async () => {
-            // For now, fetch all existing vaults. If API supports filtering by owner,
-            // we can replace this with a dedicated endpoint.
-            const vaults = await getExistingVaults();
+            const vaults = await getPersonalVaults(userAddress);
             return vaults;
         },
         staleTime: 10000 * 60,
