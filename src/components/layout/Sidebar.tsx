@@ -2,15 +2,17 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { FarmingIcon, PersonalVaultIcon } from 'public/icons';
 
-type MenuItem = {
+export type MenuItem = {
     label: string;
     href: string;
+    icon?: React.ReactNode;
 };
 
 export const MENU_ITEMS: MenuItem[] = [
-    { label: 'Farming', href: '/farming' },
-    { label: 'Personal Vault', href: '/personal-vault' },
+    { label: 'Farming', href: '/farming', icon: <FarmingIcon /> },
+    { label: 'Personal Vault', href: '/personal-vault', icon: <PersonalVaultIcon /> },
 ];
 
 export default function Sidebar() {
@@ -25,10 +27,11 @@ export default function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`mb-1 px-4 py-3 rounded-sm text-md transition-colors ${
+                            className={`mb-1 px-4 py-3 rounded-sm text-md transition-colors flex items-center gap-3 ${
                                 isActive ? 'bg-secondary text-foreground font-semibold' : 'text-secondary-foreground hover:bg-muted hover:text-foreground'
                             }`}
                         >
+                            {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
                             {item.label}
                         </Link>
                     );

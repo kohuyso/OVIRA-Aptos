@@ -7,9 +7,7 @@ import { ChevronDown, Menu } from 'lucide-react';
 import { Button } from 'shadcn/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from 'shadcn/dropdown-menu';
 import Link from 'next/link';
-import { MENU_ITEMS } from '../Sidebar';
-
-type MenuItem = { label: string; href: string };
+import { MENU_ITEMS, MenuItem } from '../Sidebar';
 
 export default function Header() {
     return (
@@ -36,7 +34,10 @@ export default function Header() {
                             <DropdownMenuContent align="end" className="w-56">
                                 {MENU_ITEMS.map((item: MenuItem) => (
                                     <Link key={item.href} href={item.href}>
-                                        <DropdownMenuItem className="cursor-pointer">{item.label}</DropdownMenuItem>
+                                        <DropdownMenuItem className="cursor-pointer">
+                                            {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
+                                            {item.label}
+                                        </DropdownMenuItem>
                                     </Link>
                                 ))}
                             </DropdownMenuContent>
