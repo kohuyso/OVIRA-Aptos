@@ -1,11 +1,15 @@
 import { Card, CardContent, CardTitle } from 'shadcn/card';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import useQueryReasoningTrace from 'src/hooks/useQueryFarming/useQueryReasoningTrace';
 import StatusCheckQuery from 'src/components/status/StatusCheckQuery';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import useMarkdownTableStyle from 'src/hooks/useMarkdownStyle/useMarkdownTableStyle';
 
 export default function ReasoningTrace() {
     const { data: traces, status } = useQueryReasoningTrace();
+    const { tableStyle } = useMarkdownTableStyle();
     const tracesContainerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -42,7 +46,10 @@ export default function ReasoningTrace() {
                                         <div className="flex-1">
                                             <div className="bg-popover px-3 py-2 rounded-md">
                                                 <p className="text-sm font-semibold text-foreground capitalize">{item.role}</p>
-                                                <p className="text-xs text-foreground leading-relaxed">{item.content}</p>
+                                                {/* <p className="text-xs text-foreground leading-relaxed">{item.content}</p> */}
+                                                <Markdown remarkPlugins={[remarkGfm]} components={tableStyle}>
+                                                    {item.content}
+                                                </Markdown>
                                             </div>
                                         </div>
                                     </div>

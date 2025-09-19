@@ -7,6 +7,8 @@ type TabItem = {
     value: string;
     label: React.ReactNode;
     content: React.ReactNode;
+    comingSoon?: boolean;
+    disabled?: boolean;
 };
 
 type TabCustomProps = {
@@ -49,14 +51,25 @@ export default function TabCustom({ tabs, height = 44, value, defaultValue, onVa
                     <TabsTrigger
                         key={tab.value}
                         value={tab.value}
+                        disabled={tab.disabled || tab.comingSoon}
                         className={cn('relative z-10 h-full flex-1 rounded-md text-sm font-medium', 'border-0 data-[state=active]:text-accent-foreground', triggerClassName)}
                     >
-                        {tab.label}
+                        <span className="flex items-center justify-center gap-2">
+                            {tab.label}
+                            {tab.comingSoon && <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground">Soon</span>}
+                        </span>
                     </TabsTrigger>
                 ))}
             </TabsList>
 
-            <div className={cn('mt-2', contentClassName)}>{tabs.find((t) => t.value === currentValue)?.content}</div>
+            <div className={cn('mt-2 relative', contentClassName)}>
+                <div className={cn(tabs.find((t) => t.value === currentValue)?.comingSoon && 'blur-sm pointer-events-none')}>{tabs.find((t) => t.value === currentValue)?.content}</div>
+                {tabs.find((t) => t.value === currentValue)?.comingSoon && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="px-3 py-1 text-xs font-medium rounded-md bg-muted text-muted-foreground">Coming soon</span>
+                    </div>
+                )}
+            </div>
         </Tabs>
     );
 }
