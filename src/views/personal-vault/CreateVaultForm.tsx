@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { Button } from 'shadcn/button';
 import { CardTitle } from 'shadcn/card';
@@ -11,14 +12,17 @@ import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/
 
 export default function CreateVaultForm() {
     const { address } = useSummarySolanaConnect();
+    const queryClient = useQueryClient();
 
     const [vaultName, setVaultName] = useState<string>('');
     const [strategyDetails, setStrategyDetails] = useState<string>('');
     const [selectedSchedule, setSelectedSchedule] = useState<SelectItemType>(scheduleDefault[0]);
     const [selectedRiskLabel, setSelectedRiskLabel] = useState<SelectItemType>(riskLabelDefault[1]);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleGenerateDraft = async () => {
         try {
+            setIsSubmitting(true);
             console.log('Generating draft with:', {
                 vaultName,
                 strategyDetails,
@@ -49,8 +53,22 @@ export default function CreateVaultForm() {
                 update_frequency: updateFrequencyInSeconds,
                 policy_prompt: strategyDetails,
             });
+
+            toast.success('Vault draft created');
+
+            // Reset form
+            setVaultName('');
+            setStrategyDetails('');
+            setSelectedSchedule(scheduleDefault[0]);
+            setSelectedRiskLabel(riskLabelDefault[1]);
+
+            // Refresh personal vaults list
+            await queryClient.invalidateQueries({ queryKey: ['useFetchPersonalVaults', address] });
         } catch (error) {
             console.log('Error generating draft:', error);
+            toast.error('Failed to create vault draft');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -90,11 +108,18 @@ export default function CreateVaultForm() {
                 <div className="w-full mt-7">
                     <Button
                         className="w-full text-[14px] h-10"
+                        disabled={isSubmitting}
                         onClick={() => {
                             handleGenerateDraft();
                         }}
                     >
-                        Generate draft
+                        {isSubmitting && (
+                            <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                            </svg>
+                        )}
+                        {isSubmitting ? 'Generating…' : 'Generate'}
                     </Button>
                 </div>
             </div>
