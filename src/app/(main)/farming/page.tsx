@@ -21,7 +21,7 @@ export default function Page() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <ActionPanel />
-                    <PositionSummary />
+                    <PositionSummary comingSoon />
                     <ChartsSection />
                 </div>
             </div>

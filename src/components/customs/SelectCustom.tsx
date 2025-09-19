@@ -1,6 +1,6 @@
 import { SetStateAction } from 'jotai';
 import * as React from 'react';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from 'shadcn/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from 'shadcn/select';
 
 export type SelectItemType = {
     label: string;
@@ -10,12 +10,13 @@ export type SelectItemType = {
 type SelectCustomProps = {
     tittle?: string;
     width?: string;
+    height?: string;
     selectedValue: SelectItemType;
     setSelectedValue: React.Dispatch<SetStateAction<SelectItemType>>;
     selectionList: Array<SelectItemType>;
 };
 
-export function SelectCustom({ tittle, selectedValue, setSelectedValue, selectionList, width }: SelectCustomProps) {
+export function SelectCustom({ tittle, selectedValue, setSelectedValue, selectionList, width, height }: SelectCustomProps) {
     return (
         <div>
             {tittle && <p className="">{tittle}</p>}
@@ -26,7 +27,7 @@ export function SelectCustom({ tittle, selectedValue, setSelectedValue, selectio
                     if (item) setSelectedValue(item);
                 }}
             >
-                <SelectTrigger className={`w-${width ? width : 'full'}`}>
+                <SelectTrigger style={{ width: width || '100%', height: height }}>
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
