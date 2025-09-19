@@ -62,7 +62,7 @@ export default function ChartsSection() {
                     let tooltipHtml = `<div style="width: 100%; background-color: #262626; padding: 10px; border-radius: 8px;">
                     ${
                         data.point.name === 'Other'
-                            ? `<span style="color: #8D8D8D;font-size: 12px;">Other </span>`
+                            ? ``
                             : `<span style="color: #8D8D8D;font-size: 12px;">${data.point.name}: </span>
                     <span style="color: #F4F4F4;font-weight: 700;font-size: 12px;">${formatNumber(this.y as number, { fractionDigits: 2, suffix: '%' })}</span>`
                     }
