@@ -3,14 +3,14 @@ import { Card, CardContent } from 'shadcn/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from 'shadcn/dropdown-menu';
 import { ChevronDown, LoaderCircle } from 'lucide-react';
 import VaultAvt from 'src/components/customs/VaultAvt';
-import { useFarmingData, useFarmingFunction } from 'src/states/atoms/farming/farming';
+import { useFarmingData } from 'src/states/atoms/farming/farming';
 import useQueryListVaults from 'src/hooks/useQueryFarming/useQueryListVaults';
+import { useRouter } from 'next/navigation';
 
 export default function TokenSection() {
     const { selectedVault, listVaults } = useFarmingData();
     const { status: listVaultsStatus } = useQueryListVaults();
-    const { setSelectedVault } = useFarmingFunction();
-
+    const router = useRouter();
     return (
         <Card>
             <CardContent>
@@ -28,7 +28,13 @@ export default function TokenSection() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-64">
                                 {listVaults.map((vault, index) => (
-                                    <DropdownMenuItem key={index} selected={selectedVault === vault} onSelect={() => setSelectedVault(vault)}>
+                                    <DropdownMenuItem
+                                        key={index}
+                                        selected={selectedVault === vault}
+                                        onSelect={() => {
+                                            router.push(`/farming?vaultId=${vault.name}`);
+                                        }}
+                                    >
                                         <VaultAvt size="small" token={vault.asset} chain={'SOL'} sizeToken={32} sizeChain={13} />
                                         <p>{vault.name}</p>
                                     </DropdownMenuItem>
