@@ -12,6 +12,8 @@ type PersonalVaultCardProps = {
     index?: number;
 };
 
+//
+
 export default function PersonalVaultCard({ vault, index = 0 }: PersonalVaultCardProps) {
     const router = useRouter();
     return (
