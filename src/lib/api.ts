@@ -14,6 +14,7 @@ export type PoolAllocation = {
 export type ReasoningTrace = {
     role: string;
     content: string;
+    status: 'FINAL' | 'DRAFT' | 'FIXED' | 'APPROVED' | 'REJECTED' | 'NEEDS_CHANGES' | 'VERIFIED' | 'REJECTED';
 };
 
 export type PersonalVault = {
@@ -56,7 +57,7 @@ export type VaultLeaderboards = Record<string, VaultLeaderboardEntry>;
 
 export type PersonalVaults = Record<string, PersonalVault>;
 
-let API_ROOT = 'http://131.153.239.187:8124';
+let API_ROOT = 'http://131.153.202.197:8124';
 
 /**
  * Optionally update the API root at runtime. Trailing slash is trimmed.

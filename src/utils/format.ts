@@ -206,3 +206,8 @@ export function formatUTCTimestamp(timestamp: number, range: TRange): string {
             return format(utcDate, 'Pp');
     }
 }
+
+export function capitalizeFirstLetter(inputString: string): string {
+    if (!inputString) return '';
+    return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+}

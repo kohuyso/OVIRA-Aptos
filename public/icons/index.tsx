@@ -29,15 +29,15 @@ export const PersonalVaultIcon: React.FC<IconProps> = ({ ...props }) => (
                 d="M18 9V8C18 6.89543 17.1046 6 16 6H8C6.89543 6 6 6.89543 6 8V16C6 17.1046 6.89543 18 8 18H16C17.1046 18 18 17.1046 18 16V15"
                 stroke="currentColor"
                 strokeWidth="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
             <path
                 d="M13.5 12C13.5 11.1716 12.8284 10.5 12 10.5C11.1716 10.5 10.5 11.1716 10.5 12C10.5 12.8284 11.1716 13.5 12 13.5C12.8284 13.5 13.5 12.8284 13.5 12Z"
                 stroke="currentColor"
                 strokeWidth="1.5"
             />
-            <path d="M13.5 12H18" stroke="currentColor" strokeWidth="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M13.5 12H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     </svg>
 );

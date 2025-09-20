@@ -6,11 +6,27 @@ import StatusCheckQuery from 'src/components/status/StatusCheckQuery';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import useMarkdownTableStyle from 'src/hooks/useMarkdownStyle/useMarkdownTableStyle';
+import { capitalizeFirstLetter } from 'src/utils/format';
+import clsx from 'clsx';
+
+const statusColors: Record<string, string> = {
+    FINAL: 'text-blue-600',
+    DRAFT: 'text-yellow-400',
+    FIXED: 'text-green-500',
+    APPROVED: 'text-green-600',
+    REJECTED: 'text-red-600',
+    NEEDS_CHANGES: 'text-orange-600',
+    VERIFIED: 'text-purple-600',
+};
+
+safelist: ['text-blue-600', 'text-yellow-400', 'text-green-500', 'text-green-600', 'text-red-600', 'text-orange-600', 'text-purple-600'];
 
 export default function ReasoningTrace() {
     const { data: traces, status } = useQueryReasoningTrace();
     const { tableStyle } = useMarkdownTableStyle();
     const tracesContainerRef = useRef<HTMLDivElement | null>(null);
+
+    console.log('traces', traces);
 
     useEffect(() => {
         const container = tracesContainerRef.current;
@@ -45,7 +61,25 @@ export default function ReasoningTrace() {
                                         <Image src={`/imgs/ai-agent/${item.role}.png`} alt={item.role} width={40} height={40} className="rounded-full flex-shrink-0" />
                                         <div className="flex-1">
                                             <div className="bg-popover px-3 py-2 rounded-md">
-                                                <p className="text-sm font-semibold text-foreground capitalize">{item.role}</p>
+                                                <div className="flex items-center mb-1">
+                                                    <span className="text-md font-semibold text-foreground capitalize mt-0">{item.role}</span>
+                                                    {item.status && (
+                                                        <p
+                                                            className={clsx(
+                                                                'text-xs mt-0.5 font-medium ml-2',
+                                                                item.status === 'FINAL' && 'text-blue-600',
+                                                                item.status === 'DRAFT' && 'text-yellow-400',
+                                                                item.status === 'FIXED' && 'text-green-500',
+                                                                item.status === 'APPROVED' && 'text-green-600',
+                                                                item.status === 'REJECTED' && 'text-red-600',
+                                                                item.status === 'NEEDS_CHANGES' && 'text-orange-600',
+                                                                item.status === 'VERIFIED' && 'text-purple-600'
+                                                            )}
+                                                        >
+                                                            {capitalizeFirstLetter(item.status)}
+                                                        </p>
+                                                    )}
+                                                </div>
                                                 {/* <p className="text-xs text-foreground leading-relaxed">{item.content}</p> */}
                                                 <Markdown remarkPlugins={[remarkGfm]} components={tableStyle}>
                                                     {item.content}

@@ -64,6 +64,8 @@ export default function CreateVaultForm() {
 
             // Refresh personal vaults list
             await queryClient.invalidateQueries({ queryKey: ['useFetchPersonalVaults', address] });
+            await queryClient.invalidateQueries({ queryKey: ['allVaultStatistics'] });
+            await queryClient.invalidateQueries({ queryKey: ['vaultLeaderboards'] });
         } catch (error) {
             console.log('Error generating draft:', error);
             toast.error('Failed to create vault draft');

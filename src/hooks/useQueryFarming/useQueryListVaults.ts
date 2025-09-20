@@ -15,6 +15,8 @@ export default function useQueryListVaults() {
         enabled: true,
         queryFn: async () => {
             const data = await getExistingVaults();
+            console.log('Fetched vaults: ', data);
+
             setListVaults(data);
             if (Array.isArray(data) && data.length > 0) {
                 if (selectedVaultName) {
@@ -30,6 +32,6 @@ export default function useQueryListVaults() {
             }
             return data;
         },
-        staleTime: 10000 * 60,
+        staleTime: 0,
     });
 }
