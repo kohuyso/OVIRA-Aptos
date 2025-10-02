@@ -2,11 +2,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserBalanceNetValue } from 'src/lib/api';
 import { useFarmingData } from 'src/states/atoms/farming/farming';
-import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
+import useSummaryAptosConnect from 'src/states/wallets/aptos-blockchain/hooks/useSummaryAptosConnect';
 
 export default function useQueryNetValue() {
     const { selectedVaultName } = useFarmingData();
-    const { address: userWallet } = useSummarySolanaConnect();
+    const { address: userWallet } = useSummaryAptosConnect();
 
     return useQuery<number>({
         queryKey: ['netValue', selectedVaultName, userWallet],

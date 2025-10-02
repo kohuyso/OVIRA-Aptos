@@ -8,10 +8,10 @@ import TextField from 'src/components/customs/DescriptionTextField';
 import { SelectCustom, SelectItemType } from 'src/components/customs/SelectCustom';
 import { riskLabelDefault, scheduleDefault } from 'src/configs';
 import { createVault, RiskLabel } from 'src/lib/api';
-import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
+import useSummaryAptosConnect from 'src/states/wallets/aptos-blockchain/hooks/useSummaryAptosConnect';
 
 export default function CreateVaultForm() {
-    const { address } = useSummarySolanaConnect();
+    const { address } = useSummaryAptosConnect();
     const queryClient = useQueryClient();
 
     const [vaultName, setVaultName] = useState<string>('');

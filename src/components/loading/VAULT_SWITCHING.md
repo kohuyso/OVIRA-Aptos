@@ -189,3 +189,4 @@ Both methods trigger the switching state independently.
 -   Check if the timeout is being cleared properly
 -   Verify no other effects are interfering with the state
 -   Look for infinite re-renders in the component
+

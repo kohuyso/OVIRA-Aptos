@@ -8,5 +8,3 @@ export { default as ReasoningTraceLoading } from './ReasoningTraceLoading';
 export { default as LoadingWrapper } from './LoadingWrapper';
 export { default as VaultSwitchingOverlay } from './VaultSwitchingOverlay';
 export { default as LoadingStateIndicator } from './LoadingStateIndicator';
-export { default as VaultSwitchingLoading } from './VaultSwitchingLoading';
-export { default as VaultSwitchingDemo } from './VaultSwitchingDemo';

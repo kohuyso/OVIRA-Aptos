@@ -9,3 +9,4 @@ interface LoadingWrapperProps {
 export default function LoadingWrapper({ isLoading, loadingComponent, children }: LoadingWrapperProps) {
     return isLoading ? <>{loadingComponent}</> : <>{children}</>;
 }
+
