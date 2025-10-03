@@ -2,7 +2,7 @@
 import Image, { ImageProps } from 'next/image';
 import { ComponentProps } from './types';
 import { getIconPaths } from './constants/imagePaths';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 export type CryptoIconProps = Omit<ComponentProps, 'alt'> &
@@ -49,6 +49,8 @@ export function CryptoIcon({
     const [imageState, setImageState] = useState<'loading' | 'loaded' | 'error'>('loading');
     const [imageError, setImageError] = useState<Error | null>(null);
     const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
 
     const iconPaths = getIconPaths(name);
 
@@ -75,7 +77,18 @@ export function CryptoIcon({
 
     const finalWidth = width ?? size;
     const finalHeight = height ?? size;
-    const imageSrc = (mode ?? resolvedTheme) === 'dark' ? iconPaths.darkMode : iconPaths.lightMode;
+
+    // Tránh mismatch khi SSR: nếu không truyền mode, chờ tới khi client mounted mới dựa vào theme
+    if (!mode && !mounted) {
+        if (loadingComponent) {
+            return <>{loadingComponent}</>; // giữ nguyên SSR/CSR lần đầu
+        }
+        // Placeholder ổn định giữa SSR và lần render đầu trên client để tránh mismatch
+        return <div className={`inline-block rounded bg-gray-200 dark:bg-gray-700 ${className}`} style={{ width: finalWidth, height: finalHeight }} aria-hidden="true" />;
+    }
+
+    const effectiveMode = mode ?? resolvedTheme;
+    const imageSrc = effectiveMode === 'dark' ? iconPaths.darkMode : iconPaths.lightMode;
 
     // Handle image error
     const handleError = () => {
@@ -133,6 +146,7 @@ export function CryptoIcon({
             onLoadingComplete={handleLoadingComplete}
             placeholder={placeholder}
             blurDataURL={blurDataURL}
+            style={{ width: finalWidth + 'px!important', height: finalHeight + 'px!important' }}
             {...imageProps}
         />
     );

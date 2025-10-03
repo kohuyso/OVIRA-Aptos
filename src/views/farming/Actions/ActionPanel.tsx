@@ -10,8 +10,8 @@ export default function ActionPanel() {
                 <TabCustom
                     height={44}
                     tabs={[
-                        { value: 'deposit', label: 'Deposit', content: <Deposit />, comingSoon: true },
-                        { value: 'withdraw', label: 'Withdraw', content: <Withdraw />, comingSoon: true },
+                        { value: 'deposit', label: 'Deposit', content: <Deposit />, comingSoon: false },
+                        { value: 'withdraw', label: 'Withdraw', content: <Withdraw />, comingSoon: false },
                     ]}
                 />
             </CardContent>

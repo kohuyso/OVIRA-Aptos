@@ -1,3 +1,5 @@
+export type NetworkName = 'Aptos' | 'Solana';
+
 export type TWalletStatus = 'Connected' | 'Disconnected' | 'Connecting' | 'Loading' | 'Disconnecting' | 'NotFound' | 'NotInstalled' | 'NotExist' | 'Rejected' | 'Error';
 
 export type TAptosId = '1' | '56';

@@ -1,9 +1,14 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 import { TVault } from 'src/states/atoms/farming/farming';
+import { NetworkName } from 'src/states/wallets/types';
 
 export type SuccessResponse = {
     status_code: number;
     message: string;
+};
+
+export type CreateVaultSuccessResponse = SuccessResponse & {
+    session_id: string;
 };
 
 export type PoolAllocation = {
@@ -15,6 +20,11 @@ export type ReasoningTrace = {
     role: string;
     content: string;
     status: 'FINAL' | 'DRAFT' | 'FIXED' | 'APPROVED' | 'REJECTED' | 'NEEDS_CHANGES' | 'VERIFIED' | 'REJECTED';
+};
+
+export type AgentReasoning = {
+    total_reasonings: number;
+    reasonings: ReasoningTrace[];
 };
 
 export type PersonalVault = {
@@ -51,6 +61,20 @@ export type VaultsStatistics = {
 export type VaultLeaderboardEntry = {
     vault_name: string;
     apy: number;
+};
+
+export type StepTransaction = {
+    contract_address: string;
+    function_name: string;
+    module_name: string;
+    inputs: Array<{ name: string; type: string; value: string | number }>;
+    state_mutability: string;
+    description: string;
+};
+
+export type TransactionDataResponse = {
+    steps: StepTransaction[];
+    total_steps: number;
 };
 
 export type VaultLeaderboards = Record<string, VaultLeaderboardEntry>;
@@ -131,10 +155,11 @@ export async function createVault(params: {
     owner_wallet_address: string;
     asset: Asset;
     risk_label: RiskLabel;
+    chain: NetworkName;
     update_frequency?: number;
     policy_prompt?: string | null;
-}): Promise<SuccessResponse> {
-    return requestJson<SuccessResponse>('/vault/create_vault', { method: 'POST' }, params);
+}): Promise<CreateVaultSuccessResponse> {
+    return requestJson<CreateVaultSuccessResponse>('/vault/create_vault', { method: 'POST' }, params);
 }
 
 export async function updateVaultPolicy(params: { vault_name: string; new_update_frequency?: number | null; new_policy_prompt?: string | null }): Promise<SuccessResponse> {
@@ -201,12 +226,16 @@ export async function getPersonalVaults(user_wallet: string): Promise<PersonalVa
 
 // ---------------------- Transaction APIs ----------------------
 
-export async function deposit(params: { vault_name: string; amount: number; user_wallet: string }): Promise<SuccessResponse> {
-    return requestJson<SuccessResponse>('/transaction/deposit', { method: 'POST' }, params);
+export async function getCreateVaultTransaction(): Promise<TransactionDataResponse> {
+    return requestJson<TransactionDataResponse>('/contractor/contract/get_create_vault_steps', { method: 'GET' });
 }
 
-export async function withdraw(params: { vault_name: string; amount: number; user_wallet: string }): Promise<SuccessResponse> {
-    return requestJson<SuccessResponse>('/transaction/withdraw', { method: 'POST' }, params);
+export async function getDepositToVault(params: { vault_name: string; amount: number; user_wallet: string }): Promise<TransactionDataResponse> {
+    return requestJson<TransactionDataResponse>('/transaction/deposit', { method: 'POST' }, params);
+}
+
+export async function getWithdrawFormVault(params: { vault_name: string; amount: number; user_wallet: string }): Promise<TransactionDataResponse> {
+    return requestJson<TransactionDataResponse>('/transaction/withdraw', { method: 'POST' }, params);
 }
 
 // ----------------------- Strategy APIs ------------------------
@@ -221,4 +250,37 @@ export async function updateVaultStrategy(params: { vault_name: string; strategy
         },
         { vault_name }
     );
+}
+
+export async function getStrategyReasoning(params: { session_id: string }): Promise<AgentReasoning> {
+    const { session_id } = params;
+    return requestJson<AgentReasoning>(
+        '/strategy/agent_reasoning',
+        {
+            method: 'GET',
+        },
+        { session_id }
+    );
+}
+
+// ----------------------- Aptos Vault APIs ------------------------
+
+export type AptosVaultCreationParams = {
+    vault_name: string;
+    owner_wallet_address: string;
+    vault_asset_address: string;
+    vault_share_token_name: string;
+    vault_share_token_symbol: string;
+    profit_max_unlock_time: number;
+    management_fee: number;
+    contract_address: string;
+    module_name?: string;
+};
+
+export async function createAptosVault(params: AptosVaultCreationParams): Promise<SuccessResponse> {
+    return requestJson<SuccessResponse>('/aptos/vault/create', { method: 'POST' }, params);
+}
+
+export async function getAptosVaultTransactionSteps(params: { vault_name: string; owner_wallet_address: string; contract_address: string; module_name?: string }): Promise<TransactionDataResponse> {
+    return requestJson<TransactionDataResponse>('/aptos/vault/transaction_steps', { method: 'GET' }, params);
 }

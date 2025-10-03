@@ -16,7 +16,7 @@ export default function TokenSection() {
             <CardContent>
                 <div className="flex items-center gap-4">
                     {listVaultsStatus === 'success' ? (
-                        <VaultAvt token={selectedVault.asset} chain={'SOL'} sizeToken={44} sizeChain={24} />
+                        <VaultAvt token={selectedVault.asset} chain={'APT'} sizeToken={44} sizeChain={24} />
                     ) : (
                         <LoaderCircle className="w-10 h-10 animate-spin text-primary" />
                     )}
@@ -35,7 +35,7 @@ export default function TokenSection() {
                                             router.push(`/farming?vaultId=${vault.name}`);
                                         }}
                                     >
-                                        <VaultAvt size="small" token={vault.asset} chain={'SOL'} sizeToken={32} sizeChain={13} />
+                                        <VaultAvt size="small" token={vault.asset} chain={'APT'} sizeToken={32} sizeChain={13} />
                                         <p>{vault.name}</p>
                                     </DropdownMenuItem>
                                 ))}

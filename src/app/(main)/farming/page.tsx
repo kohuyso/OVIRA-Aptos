@@ -22,7 +22,7 @@ function FarmingContent() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <ActionPanel />
-                    <PositionSummary comingSoon />
+                    <PositionSummary />
                     <ChartsSection />
                 </div>
             </div>

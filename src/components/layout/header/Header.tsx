@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import ButtonToggleMode from '../../toggle-mode/ButtonToggleMode';
-import { CryptoIcon } from '../../crypto-icons';
+import { CryptoIcon, TokenSymbol } from '../../crypto-icons';
 import ConnectWalletSection from './ConnectWalletSection';
 import { ChevronDown, Menu } from 'lucide-react';
 import { Button } from 'shadcn/button';
@@ -25,6 +25,11 @@ export default function Header() {
                 </div>
                 <div className="w-1/2 h-full flex items-center justify-end gap-2">
                     <ButtonToggleMode />
+                    <Button size="lg" variant="text">
+                        <CryptoIcon name={TokenSymbol.APT} size={20} />
+                        <p>Aptos</p>
+                        <ChevronDown className="w-5 h-5" />
+                    </Button>
                     <ConnectWalletSection />
                     <div className="md:hidden">
                         <DropdownMenu>

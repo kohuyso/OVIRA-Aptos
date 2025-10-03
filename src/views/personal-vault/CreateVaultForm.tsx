@@ -49,6 +49,7 @@ export default function CreateVaultForm() {
                 vault_name: vaultName,
                 owner_wallet_address: address,
                 asset: 'USDC',
+                chain: 'Aptos',
                 risk_label: selectedRiskLabel.value as RiskLabel,
                 update_frequency: updateFrequencyInSeconds,
                 policy_prompt: strategyDetails,
