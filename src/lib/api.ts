@@ -72,9 +72,30 @@ export type StepTransaction = {
     description: string;
 };
 
+export type UserPosition = {
+    account: string;
+    apt_balance: number;
+    usdc_balance: number;
+};
+
 export type TransactionDataResponse = {
     steps: StepTransaction[];
     total_steps: number;
+};
+
+export type VaultDataType = {
+    vault_id: number;
+    vault_address: string;
+    owner: string;
+    apt_balance: number;
+    token_balances: [
+        {
+            token_metadata: string;
+            balance: number;
+            balance_formatted: number;
+        }
+    ];
+    total_value_apt: number;
 };
 
 export type VaultLeaderboards = Record<string, VaultLeaderboardEntry>;
@@ -82,6 +103,7 @@ export type VaultLeaderboards = Record<string, VaultLeaderboardEntry>;
 export type PersonalVaults = Record<string, PersonalVault>;
 
 let API_ROOT = 'http://131.153.202.197:8124';
+const API_ROT_CONTRACTOR = 'http://131.153.239.187:8125';
 
 /**
  * Optionally update the API root at runtime. Trailing slash is trimmed.
@@ -110,6 +132,16 @@ function buildRequestUrl(path: string): string {
     }
     // On the server, hit the upstream API directly (configurable via env)
     const root = process.env.API_ROOT || API_ROOT;
+    return `${root}${path}`;
+}
+
+function buildRequestContractorUrl(path: string): string {
+    // On the browser, proxy via Next.js rewrites to avoid CORS
+    if (typeof window !== 'undefined') {
+        return `${API_ROT_CONTRACTOR}/v1/api${path}`;
+    }
+    // On the server, hit the upstream API directly (configurable via env)
+    const root = API_ROT_CONTRACTOR;
     return `${root}${path}`;
 }
 
@@ -148,11 +180,49 @@ async function requestJson<T>(path: string, init?: RequestInit, query?: Record<s
     }
 }
 
+async function requestContractorJson<T>(path: string, init?: RequestInit, query?: Record<string, unknown>): Promise<T> {
+    const instance = getAxiosInstance();
+    console.log('Requesting contractor API:', instance);
+
+    const method = (init?.method || 'GET').toUpperCase();
+    const config: AxiosRequestConfig = {
+        url: buildRequestContractorUrl(path),
+        method: method as AxiosRequestConfig['method'],
+        params: query,
+        headers: init?.headers as Record<string, string> | undefined,
+        // body handling below
+    };
+
+    if (init?.body) {
+        try {
+            config.data = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+        } catch {
+            // if body is not JSON string, send as-is
+            config.data = init.body as unknown as object;
+        }
+    }
+
+    try {
+        const res = await instance.request<T>(config);
+        return res.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            const axErr = error as AxiosError;
+            const status = axErr.response?.status;
+            const data = axErr.response?.data as unknown;
+            const msg = typeof data === 'string' ? data : data ? JSON.stringify(data) : axErr.message;
+            throw new Error(`Request failed${status ? ` ${status}` : ''}: ${msg}`);
+        }
+        throw error as Error;
+    }
+}
+
 // ------------------------- Vault APIs -------------------------
 
 export async function createVault(params: {
     vault_name: string;
     owner_wallet_address: string;
+    vault_address: string;
     asset: Asset;
     risk_label: RiskLabel;
     chain: NetworkName;
@@ -226,16 +296,57 @@ export async function getPersonalVaults(user_wallet: string): Promise<PersonalVa
 
 // ---------------------- Transaction APIs ----------------------
 
+export async function getAllVaultContractor(params: { user_address: string }): Promise<Array<VaultDataType>> {
+    return requestContractorJson<Array<VaultDataType>>(`/contractor/contract/get_all_vaults/${params.user_address}`, {
+        method: 'GET',
+        headers: {
+            'X-API-KEY': 'your-api-key',
+        },
+    });
+}
+
+export async function getGetBalance(params: { user_address: string }): Promise<UserPosition> {
+    return requestContractorJson<UserPosition>(`/contractor/contract/get_balance/${params.user_address}`, {
+        method: 'GET',
+        headers: {
+            'X-API-KEY': 'your-api-key',
+        },
+    });
+}
+
 export async function getCreateVaultTransaction(): Promise<TransactionDataResponse> {
-    return requestJson<TransactionDataResponse>('/contractor/contract/get_create_vault_steps', { method: 'GET' });
+    return requestContractorJson<TransactionDataResponse>('/contractor/contract/get_create_vault_steps', {
+        method: 'GET',
+        headers: {
+            'X-API-KEY': 'your-api-key',
+        },
+    });
 }
 
-export async function getDepositToVault(params: { vault_name: string; amount: number; user_wallet: string }): Promise<TransactionDataResponse> {
-    return requestJson<TransactionDataResponse>('/transaction/deposit', { method: 'POST' }, params);
+export async function getDepositToVault(params: { num_vault: number; token: string; amount: number }): Promise<TransactionDataResponse> {
+    return requestContractorJson<TransactionDataResponse>(
+        '/contractor/contract/get_deposit_steps',
+        {
+            method: 'GET',
+            headers: {
+                'X-API-KEY': 'your-api-key',
+            },
+        },
+        params
+    );
 }
 
-export async function getWithdrawFormVault(params: { vault_name: string; amount: number; user_wallet: string }): Promise<TransactionDataResponse> {
-    return requestJson<TransactionDataResponse>('/transaction/withdraw', { method: 'POST' }, params);
+export async function getWithdrawFormVault(params: { num_vault: number; token: string; amount: number }): Promise<TransactionDataResponse> {
+    return requestContractorJson<TransactionDataResponse>(
+        '/contractor/contract/get_withdraw_steps',
+        {
+            method: 'GET',
+            headers: {
+                'X-API-KEY': 'your-api-key',
+            },
+        },
+        params
+    );
 }
 
 // ----------------------- Strategy APIs ------------------------

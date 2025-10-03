@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
                 source: '/api/:path*',
                 destination: 'http://131.153.202.197:8124/:path*',
             },
+            {
+                source: '/v1/api/:path*',
+                destination: 'http://131.153.239.187:8125/:path*',
+            },
         ];
     },
     images: {

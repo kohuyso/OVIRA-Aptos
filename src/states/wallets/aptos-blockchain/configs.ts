@@ -9,5 +9,4 @@ export const aptosNetworkIds: Record<TAptosNetworkId, Network> = {
     aptos_mainnet: Network.MAINNET,
 };
 
-export const aptosNetworkSelect = aptosNetworkIds[TAptosNetworkId.aptos_devnet];
-
+export const aptosNetworkSelect = aptosNetworkIds[TAptosNetworkId.aptos_mainnet];

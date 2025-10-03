@@ -8,7 +8,7 @@ export default function useSummaryAptosConnect(): SummaryConnectInfo {
 
     return {
         address: account?.address?.toString() || '',
-        chainId: TAptosNetworkId.aptos_devnet as string,
+        chainId: TAptosNetworkId.aptos_mainnet as string,
         chainIcon: <CryptoIcon name="APT" />,
         chainName: 'Aptos',
         status: account ? 'Connected' : 'Disconnected',
