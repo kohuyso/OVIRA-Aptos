@@ -136,12 +136,10 @@ function buildRequestUrl(path: string): string {
 }
 
 function buildRequestContractorUrl(path: string): string {
-    // On the browser, proxy via Next.js rewrites to avoid CORS
     if (typeof window !== 'undefined') {
-        return `${API_ROT_CONTRACTOR}/v1/api${path}`;
+        return `/v1/api${path}`; // ✅ correct
     }
-    // On the server, hit the upstream API directly (configurable via env)
-    const root = API_ROT_CONTRACTOR;
+    const root = process.env.API_ROOT_CONTRACTOR || API_ROT_CONTRACTOR;
     return `${root}${path}`;
 }
 

@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
             },
             {
                 source: '/v1/api/:path*',
-                destination: 'http://131.153.239.187:8125/:path*',
+                destination: 'http://131.153.239.187:8125/v1/api/:path*',
             },
         ];
     },

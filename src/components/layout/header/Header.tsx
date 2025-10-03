@@ -28,7 +28,6 @@ export default function Header() {
                     <Button size="lg" variant="text">
                         <CryptoIcon name={TokenSymbol.APT} size={20} />
                         <p>Aptos</p>
-                        <ChevronDown className="w-5 h-5" />
                     </Button>
                     <ConnectWalletSection />
                     <div className="md:hidden">

@@ -44,9 +44,6 @@ export default function PersonalVaultCard({ vault, index = 0 }: PersonalVaultCar
                 <Button variant="outline" className="border-primary bg-amber-300 py-4.5 text-[14px]" onClick={() => router.push(`/farming?vaultId=${vault.vault_name}`)}>
                     View
                 </Button>
-                <Button className="text-[14px]" disabled>
-                    Deposit
-                </Button>
             </div>
         </div>
     );
