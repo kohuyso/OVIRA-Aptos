@@ -1,10 +1,10 @@
 'use client';
 import { getAllVaultContractor } from 'src/lib/api';
 import { useQuery } from '@tanstack/react-query';
-import useSummaryAptosConnect from 'src/states/wallets/aptos-blockchain/hooks/useSummaryAptosConnect';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 
 export default function useQueryAllContractorVaults() {
-    const { address } = useSummaryAptosConnect();
+    const { address } = useSummaryConnect();
     return useQuery({
         queryKey: ['useQueryAllContractorVaults', address],
         enabled: !!address,

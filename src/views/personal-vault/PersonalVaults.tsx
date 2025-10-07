@@ -1,12 +1,12 @@
 'use client';
 
-import useSummaryAptosConnect from 'src/states/wallets/aptos-blockchain/hooks/useSummaryAptosConnect';
 import PersonalVaultCard from './PersonalVaultCard';
 import { CardTitle } from 'shadcn/card';
 import useFetchPersonalVaults from 'src/hooks/usePersonalVaults/useFetchPersonalVaults';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 
 export default function PersonalVaults() {
-    const { address } = useSummaryAptosConnect();
+    const { address } = useSummaryConnect();
     console.log('address111', address);
 
     const { data: personalListVault, isLoading } = useFetchPersonalVaults(address);

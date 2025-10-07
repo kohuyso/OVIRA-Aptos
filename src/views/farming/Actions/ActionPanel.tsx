@@ -23,8 +23,8 @@ export default function ActionPanel() {
                 <TabCustom
                     height={44}
                     tabs={[
-                        { value: 'deposit', label: 'Deposit', content: <Deposit maxAmount={userBalance?.usdc_balance} vault_num={vault_num} />, comingSoon: false },
-                        { value: 'withdraw', label: 'Withdraw', content: <Withdraw maxAmount={1} vault_num={vault_num} />, comingSoon: false },
+                        { value: 'deposit', label: 'Deposit', content: <Deposit maxAmount={userBalance?.usdc_balance} vault_num={vault_num} />, comingSoon: true },
+                        { value: 'withdraw', label: 'Withdraw', content: <Withdraw maxAmount={1} vault_num={vault_num} />, comingSoon: true },
                     ]}
                 />
             </CardContent>

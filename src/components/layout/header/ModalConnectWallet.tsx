@@ -1,25 +1,38 @@
 'use client';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { useWallet as useAptosWallet } from '@aptos-labs/wallet-adapter-react';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import type { WalletName } from '@solana/wallet-adapter-base';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { Button } from 'shadcn/button';
 import { useState } from 'react';
+import { getSelectedChain } from 'src/utils/chain';
 
 interface IProps {
     onClose: () => void;
 }
 
 export default function ModalConnectWallet({ onClose }: IProps) {
-    const { disconnect, connect, wallet, wallets } = useWallet();
+    const selected = getSelectedChain();
+    const aptos = useAptosWallet();
+    const solana = useSolanaWallet();
     const [connecting, setConnecting] = useState<string | null>(null);
 
     async function handleConnect(walletName: string) {
         try {
             setConnecting(walletName);
-            if (wallet) {
-                await disconnect();
+            if (selected === 'solana') {
+                if (solana.connected) {
+                    await solana.disconnect();
+                }
+                await solana.select(walletName as WalletName);
+                await solana.connect();
+            } else {
+                if (aptos.wallet) {
+                    await aptos.disconnect();
+                }
+                await aptos.connect(walletName);
             }
-            await connect(walletName);
             onClose();
         } catch (error) {
             console.error(error);
@@ -30,7 +43,7 @@ export default function ModalConnectWallet({ onClose }: IProps) {
     }
     return (
         <>
-            {wallets.map((walletInfo, index) => {
+            {(selected === 'solana' ? solana.wallets.map((w) => ({ name: w.adapter.name, icon: w.adapter.icon })) : aptos.wallets).map((walletInfo, index) => {
                 const isThisConnecting = connecting === walletInfo.name;
                 const isDisabled = Boolean(connecting) && !isThisConnecting;
                 return (
