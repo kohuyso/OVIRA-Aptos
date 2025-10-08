@@ -262,16 +262,16 @@ export async function getVaultReasoningTrace(vault_name: string): Promise<Reason
     return requestJson<ReasoningTrace[]>('/vault/ai_reasoning_trace', { method: 'GET' }, { vault_name });
 }
 
-export async function getExistingVaults(): Promise<TVault[]> {
-    return requestJson<TVault[]>('/vault/existing_vaults', { method: 'GET' });
+export async function getExistingVaults(chain: string): Promise<TVault[]> {
+    return requestJson<TVault[]>('/vault/existing_vaults', { method: 'GET' }, { chain });
 }
 
-export async function getAllVaultsStatistics(): Promise<VaultsStatistics> {
-    return requestJson<VaultsStatistics>('/vault/all_vault_statistics', { method: 'GET' });
+export async function getAllVaultsStatistics(chain: string): Promise<VaultsStatistics> {
+    return requestJson<VaultsStatistics>('/vault/all_vault_statistics', { method: 'GET' }, { chain });
 }
 
-export async function getVaultLeaderboards(): Promise<VaultLeaderboards> {
-    return requestJson<VaultLeaderboards>('/vault/vault_leaderboards', { method: 'GET' });
+export async function getVaultLeaderboards(chain: string): Promise<VaultLeaderboards> {
+    return requestJson<VaultLeaderboards>('/vault/vault_leaderboards', { method: 'GET' }, { chain });
 }
 
 // ------------------------- User APIs -------------------------
@@ -288,8 +288,8 @@ export async function getUserBalanceEarnings(params: { user_wallet: string; vaul
     return requestJson<number>('/user/balance/earnings', { method: 'GET' }, params);
 }
 
-export async function getPersonalVaults(user_wallet: string): Promise<PersonalVaults> {
-    return requestJson<PersonalVaults>('/user/personal_vaults', { method: 'GET' }, { user_wallet });
+export async function getPersonalVaults(user_wallet: string, chain: string): Promise<PersonalVaults> {
+    return requestJson<PersonalVaults>('/user/personal_vaults', { method: 'GET' }, { user_wallet, chain });
 }
 
 // ---------------------- Transaction APIs ----------------------

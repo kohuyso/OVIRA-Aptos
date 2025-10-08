@@ -22,7 +22,7 @@ export default function useSummaryConnect(): SummaryConnectInfo {
     const aptos = useAptosWallet();
     const solana = useSolanaWallet();
 
-    const solAddress = solana.publicKey ? solana.publicKey.toBase58() : '';
+    const solAddress = solana?.publicKey ? solana?.publicKey?.toBase58() : '';
     const aptAddress = aptos.account?.address?.toString() || '';
 
     if (selected === 'solana') {
