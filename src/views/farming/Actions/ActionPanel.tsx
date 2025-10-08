@@ -6,11 +6,13 @@ import useQueryUserPosition from 'src/hooks/useQueryFarming/useQueryUserPosition
 import useQueryAllContractorVaults from 'src/hooks/useQueryFarming/useQueryAllContractorVaults';
 import { useMemo } from 'react';
 import { useFarmingData } from 'src/states/atoms/farming/farming';
+import { getSelectedChain } from 'src/utils/chain';
 
 export default function ActionPanel() {
     const { selectedVault } = useFarmingData();
     const { data: userBalance } = useQueryUserPosition();
     const { data: contractorVaultData } = useQueryAllContractorVaults();
+    const selected = getSelectedChain();
 
     const vault_num = useMemo(() => {
         if (!contractorVaultData || !selectedVault.name) return undefined;
@@ -23,8 +25,8 @@ export default function ActionPanel() {
                 <TabCustom
                     height={44}
                     tabs={[
-                        { value: 'deposit', label: 'Deposit', content: <Deposit maxAmount={userBalance?.usdc_balance} vault_num={vault_num} />, comingSoon: true },
-                        { value: 'withdraw', label: 'Withdraw', content: <Withdraw maxAmount={1} vault_num={vault_num} />, comingSoon: true },
+                        { value: 'deposit', label: 'Deposit', content: <Deposit maxAmount={userBalance?.usdc_balance} vault_num={vault_num} />, comingSoon: selected === 'solana' ? true : false },
+                        { value: 'withdraw', label: 'Withdraw', content: <Withdraw maxAmount={1} vault_num={vault_num} />, comingSoon: selected === 'solana' ? true : false },
                     ]}
                 />
             </CardContent>

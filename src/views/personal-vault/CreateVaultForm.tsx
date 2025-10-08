@@ -45,36 +45,69 @@ export default function CreateVaultForm() {
                 toast.error('Strategy details are required');
                 return;
             }
-            const createdVaultData = await createVaultFn();
-            console.log('Created vault data:', createdVaultData);
+            if (chainName === 'Solana') {
+                const createdVaultData = await createVaultFn();
+                console.log('Created vault data:', createdVaultData);
 
-            const allVaultData = null;
-            // if (createdVaultData) {
-            //     // fallback to fetch
-            //     allVaultData = await getAllVaultContractor({ user_address: address });
-            //     console.log('Fetched all vault data as fallback:', allVaultData);
-            //     if (!allVaultData || allVaultData.length === 0) {
-            //         toast.error('No vault data found after creation');
-            //         return;
-            //     }
-            // } else {
-            //     toast.error('Failed to create vault on-chain');
-            //     return;
-            // }
+                const allVaultData = null;
+                // if (createdVaultData) {
+                //     // fallback to fetch
+                //     allVaultData = await getAllVaultContractor({ user_address: address });
+                //     console.log('Fetched all vault data as fallback:', allVaultData);
+                //     if (!allVaultData || allVaultData.length === 0) {
+                //         toast.error('No vault data found after creation');
+                //         return;
+                //     }
+                // } else {
+                //     toast.error('Failed to create vault on-chain');
+                //     return;
+                // }
 
-            // Call the createVault function from the API
-            await createVault({
-                vault_name: vaultName,
-                owner_wallet_address: address,
-                asset: 'USDC',
-                vault_address: '0x123',
-                chain: chainName === 'Solana' ? 'Solana' : 'Aptos',
-                risk_label: selectedRiskLabel.value as RiskLabel,
-                update_frequency: updateFrequencyInSeconds,
-                policy_prompt: strategyDetails,
-            });
+                // Call the createVault function from the API
+                await createVault({
+                    vault_name: vaultName,
+                    owner_wallet_address: address,
+                    asset: 'USDC',
+                    vault_address: '0x123',
+                    chain: chainName === 'Solana' ? 'Solana' : 'Aptos',
+                    risk_label: selectedRiskLabel.value as RiskLabel,
+                    update_frequency: updateFrequencyInSeconds,
+                    policy_prompt: strategyDetails,
+                });
 
-            toast.success('Vault draft created');
+                toast.success('Vault draft created');
+            } else if (chainName === 'Aptos') {
+                const createdVaultData = await createVaultFn();
+                console.log('Created vault data:', createdVaultData);
+
+                let allVaultData = null;
+                if (createdVaultData) {
+                    // fallback to fetch
+                    allVaultData = await getAllVaultContractor({ user_address: address });
+                    console.log('Fetched all vault data as fallback:', allVaultData);
+                    if (!allVaultData || allVaultData.length === 0) {
+                        toast.error('No vault data found after creation');
+                        return;
+                    }
+                } else {
+                    toast.error('Failed to create vault on-chain');
+                    return;
+                }
+
+                // Call the createVault function from the API
+                await createVault({
+                    vault_name: vaultName,
+                    owner_wallet_address: address,
+                    asset: 'USDC',
+                    vault_address: allVaultData?.[allVaultData?.length - 1]?.vault_address,
+                    chain: 'Aptos',
+                    risk_label: selectedRiskLabel.value as RiskLabel,
+                    update_frequency: updateFrequencyInSeconds,
+                    policy_prompt: strategyDetails,
+                });
+
+                toast.success('Vault draft created');
+            }
 
             // Reset form
             setVaultName('');
