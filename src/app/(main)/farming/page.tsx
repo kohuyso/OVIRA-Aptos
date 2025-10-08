@@ -25,7 +25,7 @@ function FarmingContent() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <ActionPanel />
-                    <PositionSummary comingSoon={selected === 'solana' ? true : false} />
+                    <PositionSummary comingSoon={selected === 'solana' ? true : true} />
                     <ChartsSection />
                 </div>
             </div>
