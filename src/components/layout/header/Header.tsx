@@ -1,15 +1,16 @@
 'use client';
 import React from 'react';
 import ButtonToggleMode from '../../toggle-mode/ButtonToggleMode';
-import { CryptoIcon } from '../../crypto-icons';
+import { CryptoIcon, TokenSymbol } from '../../crypto-icons';
 import ConnectWalletSection from './ConnectWalletSection';
-import { ChevronDown, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from 'shadcn/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from 'shadcn/dropdown-menu';
 import Link from 'next/link';
 import { MENU_ITEMS, MenuItem } from '../Sidebar';
 
 export default function Header() {
+    const selectedChain = process.env.NEXT_PUBLIC_CHAIN === 'solana' ? 'Solana' : 'Aptos';
     return (
         <div className="fixed top-0 left-0 right-0 z-50 w-full h-16 bg-background border-b px-6">
             <div className="w-full h-full flex items-center justify-between">
@@ -19,9 +20,8 @@ export default function Header() {
                 <div className="w-1/2 h-full flex items-center justify-end gap-2">
                     <ButtonToggleMode />
                     <Button size="lg" variant="text">
-                        <CryptoIcon name="SOL" size={20} />
-                        <p>Solana</p>
-                        <ChevronDown className="w-5 h-5" />
+                        <CryptoIcon name={selectedChain === 'Aptos' ? TokenSymbol.APT : TokenSymbol.SOL} size={20} />
+                        <p>{selectedChain}</p>
                     </Button>
                     <ConnectWalletSection />
                     <div className="md:hidden">

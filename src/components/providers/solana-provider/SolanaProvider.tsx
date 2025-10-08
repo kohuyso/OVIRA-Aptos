@@ -1,20 +1,21 @@
-// import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 'use client';
+import { ReactNode, useMemo } from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import { useMemo } from 'react';
-import { solNetworkSelect } from 'src/states/wallets/solana-blockchain/configs';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { getSolanaRpcConfig } from 'src/utils/chain';
 
-export default function SolanaProvider({ children }: { children: React.ReactNode }) {
-    // You can also provide a custom RPC endpoint.
-    const endpoint = useMemo(() => clusterApiUrl(solNetworkSelect), []);
+interface Props {
+    children: ReactNode;
+}
 
-    const wallets = useMemo(() => [new SolflareWalletAdapter({ network: solNetworkSelect })], []);
+export default function SolanaProvider({ children }: Props) {
+    const { endpoint, httpHeaders } = getSolanaRpcConfig();
+
+    const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect localStorageKey="solana.connectWallet">
+        <ConnectionProvider endpoint={endpoint} config={{ commitment: 'confirmed', httpHeaders }}>
+            <WalletProvider wallets={wallets} autoConnect>
                 {children}
             </WalletProvider>
         </ConnectionProvider>

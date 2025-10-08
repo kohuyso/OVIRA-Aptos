@@ -1,18 +1,65 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button } from 'shadcn/button';
-import { Wallet } from 'lucide-react';
+import { Wallet, Loader2 } from 'lucide-react';
 import { CryptoIcon } from 'src/components/crypto-icons';
 import { formatNumber } from 'src/utils/format';
 import { regexConfigValue } from 'src/utils';
+import useWithdrawFormVault from 'src/hooks/usePersonalVaults/useWithdrawFormVault';
 
-export default function Withdraw() {
+type WithdrawProps = {
+    maxAmount?: number;
+    vault_num?: number;
+};
+
+export default function Withdraw({ maxAmount, vault_num }: WithdrawProps) {
+    const { withdrawFromVaultFn } = useWithdrawFormVault();
     const [amount, setAmount] = useState('0');
+    const [isWithdrawing, setIsWithdrawing] = useState(false);
 
     function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
         const value = regexConfigValue(e.target.value);
-        setAmount(value);
+        const parts = value.split('.');
+        if (parts.length === 2 && parts[1].length > 6) {
+            setAmount(`${parts[0]}.${parts[1].slice(0, 6)}`);
+        } else {
+            setAmount(value);
+        }
     }
+
+    const handleWithdraw = useCallback(async () => {
+        const numericAmount = Number(amount) || 0;
+        if (numericAmount <= 0) return;
+        if (typeof maxAmount === 'number' && numericAmount > maxAmount) return;
+        if (!vault_num) return;
+
+        setIsWithdrawing(true);
+        try {
+            const result = await withdrawFromVaultFn({ vault_num: vault_num, token: 'USDC', amount: numericAmount });
+            if (result && Array.isArray(result)) {
+                setAmount('0');
+            }
+        } finally {
+            setIsWithdrawing(false);
+        }
+    }, [amount, maxAmount, vault_num, withdrawFromVaultFn]);
+
+    function toSix(n: number) {
+        const fixed = n.toFixed(6);
+        return fixed.replace(/\.0+$/, '').replace(/(\.\d*[1-9])0+$/, '$1');
+    }
+
+    function handleHalf() {
+        if (typeof maxAmount !== 'number') return;
+        const half = maxAmount / 2;
+        setAmount(toSix(half));
+    }
+
+    function handleMax() {
+        if (typeof maxAmount !== 'number') return;
+        setAmount(toSix(maxAmount));
+    }
+
     return (
         <>
             <div className="flex flex-col gap-2 rounded-md border p-4">
@@ -21,13 +68,13 @@ export default function Withdraw() {
                     <div className="flex items-center gap-2 text-xs">
                         <div className="flex items-center gap-1 text-muted-foreground">
                             <Wallet className="size-4" />
-                            <span>0 USDC</span>
+                            <span>{typeof maxAmount === 'number' ? `${toSix(maxAmount)} USDC` : '0 USDC'}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                            <Button size="xs" variant="outline">
+                            <Button size="xs" variant="outline" onClick={handleHalf} disabled={typeof maxAmount !== 'number' || maxAmount <= 0}>
                                 HALF
                             </Button>
-                            <Button size="xs" variant="outline">
+                            <Button size="xs" variant="outline" onClick={handleMax} disabled={typeof maxAmount !== 'number' || maxAmount <= 0}>
                                 MAX
                             </Button>
                         </div>
@@ -41,10 +88,23 @@ export default function Withdraw() {
                     </div>
                 </div>
                 <div className="text-xs text-muted-foreground leading-none">≈ ${formatNumber(Number(amount) * 1.000001)} USD</div>
+                {typeof maxAmount === 'number' && Number(amount) > maxAmount ? <div className="text-xs text-destructive">Amount exceeds available balance.</div> : null}
             </div>
             <div className="mt-5">
-                <Button className="w-full" size="lg">
-                    Withdraw
+                <Button
+                    className="w-full"
+                    size="lg"
+                    disabled={!vault_num || isWithdrawing || Number(amount) <= 0 || (typeof maxAmount === 'number' && Number(amount) > maxAmount)}
+                    onClick={handleWithdraw}
+                >
+                    {isWithdrawing ? (
+                        <span className="inline-flex items-center">
+                            <Loader2 className="mr-2 size-4 animate-spin" />
+                            Withdrawing...
+                        </span>
+                    ) : (
+                        'Withdraw'
+                    )}
                 </Button>
             </div>
         </>

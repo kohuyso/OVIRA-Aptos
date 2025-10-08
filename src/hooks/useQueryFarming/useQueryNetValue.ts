@@ -2,11 +2,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserBalanceEarnings } from 'src/lib/api';
 import { useFarmingData } from 'src/states/atoms/farming/farming';
-import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 
 export default function useQueryEarnings() {
     const { selectedVaultName } = useFarmingData();
-    const { address: userWallet } = useSummarySolanaConnect();
+    const { address: userWallet } = useSummaryConnect();
 
     return useQuery<number>({
         queryKey: ['earnings', selectedVaultName, userWallet],

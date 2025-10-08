@@ -1,18 +1,35 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button } from 'shadcn/button';
 import { Wallet } from 'lucide-react';
 import { CryptoIcon } from 'src/components/crypto-icons';
 import { formatNumber } from 'src/utils/format';
 import { regexConfigValue } from 'src/utils';
+import useDepositToVault from 'src/hooks/usePersonalVaults/useDepositToVault';
 
-export default function Deposit() {
+type DepositProps = {
+    maxAmount?: number;
+    vault_num?: number;
+};
+
+export default function Deposit({ maxAmount, vault_num }: DepositProps) {
+    const { depositToVaultFn } = useDepositToVault();
+
     const [amount, setAmount] = useState('0');
 
     function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
         const value = regexConfigValue(e.target.value);
         setAmount(value);
     }
+
+    const handleDeposit = useCallback(async () => {
+        const numericAmount = Number(amount) || 0;
+        if (numericAmount <= 0) return;
+        if (typeof maxAmount === 'number' && numericAmount > maxAmount) return;
+        if (!vault_num) return;
+        await depositToVaultFn({ vault_num, token: 'USDC', amount: numericAmount });
+    }, [amount, depositToVaultFn, maxAmount, vault_num]);
+
     return (
         <>
             <div className="flex flex-col gap-2 rounded-md border p-4">
@@ -21,13 +38,23 @@ export default function Deposit() {
                     <div className="flex items-center gap-2 text-xs">
                         <div className="flex items-center gap-1 text-muted-foreground">
                             <Wallet className="size-4" />
-                            <span>0 USDC</span>
+                            <span>{typeof maxAmount === 'number' ? `${maxAmount} USDC` : '0 USDC'}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                            <Button size="xs" variant="outline">
+                            <Button
+                                size="xs"
+                                variant="outline"
+                                onClick={() => typeof maxAmount === 'number' && setAmount(String(maxAmount / 2))}
+                                disabled={typeof maxAmount !== 'number' || maxAmount <= 0}
+                            >
                                 HALF
                             </Button>
-                            <Button size="xs" variant="outline">
+                            <Button
+                                size="xs"
+                                variant="outline"
+                                onClick={() => typeof maxAmount === 'number' && setAmount(String(maxAmount))}
+                                disabled={typeof maxAmount !== 'number' || maxAmount <= 0}
+                            >
                                 MAX
                             </Button>
                         </div>
@@ -43,7 +70,7 @@ export default function Deposit() {
                 <div className="text-xs text-muted-foreground leading-none">≈ ${formatNumber(Number(amount) * 1.000001)} USD</div>
             </div>
             <div className="mt-5">
-                <Button className="w-full" size="lg">
+                <Button className="w-full" size="lg" onClick={handleDeposit} disabled={!vault_num || Number(amount) <= 0 || (typeof maxAmount === 'number' && Number(amount) > maxAmount)}>
                     Deposit
                 </Button>
             </div>

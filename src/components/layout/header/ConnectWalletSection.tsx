@@ -2,7 +2,7 @@
 import { Button } from 'shadcn/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/popover';
 import { useModalFunction } from 'src/states/modal/modal';
-import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 import { formatAddress } from 'src/utils/format';
 import ModalConnectWallet from './ModalConnectWallet';
 import { ChevronDown, Copy, LoaderCircle } from 'lucide-react';
@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
 import { createUser } from 'src/lib/api';
 
 export default function ConnectWalletSection() {
-    const { address, status, walletIcon, walletName, disconnect } = useSummarySolanaConnect();
+    const { address, status, walletIcon, walletName, disconnect } = useSummaryConnect();
     const { openModal, closeModal } = useModalFunction();
 
     const createdAddressesRef = useRef<Set<string>>(new Set());

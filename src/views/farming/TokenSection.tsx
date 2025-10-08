@@ -6,8 +6,10 @@ import VaultAvt from 'src/components/customs/VaultAvt';
 import { useFarmingData } from 'src/states/atoms/farming/farming';
 import useQueryListVaults from 'src/hooks/useQueryFarming/useQueryListVaults';
 import { useRouter } from 'next/navigation';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 
 export default function TokenSection() {
+    const { chainName } = useSummaryConnect();
     const { selectedVault, listVaults } = useFarmingData();
     const { status: listVaultsStatus } = useQueryListVaults();
     const router = useRouter();
@@ -16,7 +18,7 @@ export default function TokenSection() {
             <CardContent>
                 <div className="flex items-center gap-4">
                     {listVaultsStatus === 'success' ? (
-                        <VaultAvt token={selectedVault.asset} chain={'SOL'} sizeToken={44} sizeChain={24} />
+                        <VaultAvt token={selectedVault.asset} chain={chainName === 'Aptos' ? 'APT' : 'SOL'} sizeToken={44} sizeChain={24} />
                     ) : (
                         <LoaderCircle className="w-10 h-10 animate-spin text-primary" />
                     )}
@@ -35,7 +37,7 @@ export default function TokenSection() {
                                             router.push(`/farming?vaultId=${vault.name}`);
                                         }}
                                     >
-                                        <VaultAvt size="small" token={vault.asset} chain={'SOL'} sizeToken={32} sizeChain={13} />
+                                        <VaultAvt size="small" token={vault.asset} chain={chainName === 'Aptos' ? 'APT' : 'SOL'} sizeToken={32} sizeChain={13} />
                                         <p>{vault.name}</p>
                                     </DropdownMenuItem>
                                 ))}

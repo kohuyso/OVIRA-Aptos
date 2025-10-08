@@ -1,12 +1,14 @@
 'use client';
 
-import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
 import PersonalVaultCard from './PersonalVaultCard';
 import { CardTitle } from 'shadcn/card';
 import useFetchPersonalVaults from 'src/hooks/usePersonalVaults/useFetchPersonalVaults';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 
 export default function PersonalVaults() {
-    const { address } = useSummarySolanaConnect();
+    const { address } = useSummaryConnect();
+    console.log('address111', address);
+
     const { data: personalListVault, isLoading } = useFetchPersonalVaults(address);
     // const personalListVault: Array<PersonalVault> = [
     //     {
@@ -31,7 +33,7 @@ export default function PersonalVaults() {
             <div className="flex flex-col gap-2">
                 {isLoading && (
                     <div className="flex flex-col gap-2">
-                        {Array.from({ length: 3 }).map((_, idx) => (
+                        {Array.from({ length: 2 }).map((_, idx) => (
                             <div key={idx} className="flex items-center justify-between rounded-md border p-3 animate-pulse">
                                 <div className="flex items-center gap-3">
                                     <div className="h-10 w-10 rounded-full bg-muted" />

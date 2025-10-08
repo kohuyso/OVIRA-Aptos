@@ -8,7 +8,7 @@ import { ThemeProvider } from 'src/components/providers/theme-provider/ThemeProv
 import JotaiProvider from 'src/components/providers/jotai-provider/JotaiProvider';
 import { ToastContainer } from 'react-toastify';
 import { KEYWORD, SITE_DESCRIPTION, SITE_TITLE, SITE_URL, THUMBNAIL } from 'src/constant/metadata';
-import SolanaProvider from 'src/components/providers/solana-provider/SolanaProvider';
+import BlockchainProvider from 'src/components/providers/BlockchainProvider';
 import ReactQueryProvider from 'src/components/providers/react-query/ReactQueryProvider';
 
 const interTight = Inter_Tight({
@@ -101,7 +101,7 @@ export default function RootLayout({
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
                     <JotaiProvider>
                         <ReactQueryProvider>
-                            <SolanaProvider>{children}</SolanaProvider>
+                            <BlockchainProvider>{children}</BlockchainProvider>
                         </ReactQueryProvider>
                     </JotaiProvider>
                     {process.env.NODE_ENV === 'development' && (

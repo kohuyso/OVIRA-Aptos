@@ -7,12 +7,14 @@ import { CardTitle } from 'shadcn/card';
 import TextField from 'src/components/customs/DescriptionTextField';
 import { SelectCustom, SelectItemType } from 'src/components/customs/SelectCustom';
 import { riskLabelDefault, scheduleDefault } from 'src/configs';
-import { createVault, RiskLabel } from 'src/lib/api';
-import useSummarySolanaConnect from 'src/states/wallets/solana-blockchain/hooks/useSummarySolanaConnect';
+import { createVault, getAllVaultContractor, RiskLabel } from 'src/lib/api';
+import useCreateAptosVault from 'src/hooks/usePersonalVaults/useCreateAptosVault';
+import useSummaryConnect from 'src/states/wallets/hooks/useSummaryConnect';
 
 export default function CreateVaultForm() {
-    const { address } = useSummarySolanaConnect();
+    const { address, chainName } = useSummaryConnect();
     const queryClient = useQueryClient();
+    const { createVaultFn } = useCreateAptosVault();
 
     const [vaultName, setVaultName] = useState<string>('');
     const [strategyDetails, setStrategyDetails] = useState<string>('');
@@ -43,12 +45,30 @@ export default function CreateVaultForm() {
                 toast.error('Strategy details are required');
                 return;
             }
+            const createdVaultData = await createVaultFn();
+            console.log('Created vault data:', createdVaultData);
+
+            const allVaultData = null;
+            // if (createdVaultData) {
+            //     // fallback to fetch
+            //     allVaultData = await getAllVaultContractor({ user_address: address });
+            //     console.log('Fetched all vault data as fallback:', allVaultData);
+            //     if (!allVaultData || allVaultData.length === 0) {
+            //         toast.error('No vault data found after creation');
+            //         return;
+            //     }
+            // } else {
+            //     toast.error('Failed to create vault on-chain');
+            //     return;
+            // }
 
             // Call the createVault function from the API
             await createVault({
                 vault_name: vaultName,
                 owner_wallet_address: address,
                 asset: 'USDC',
+                vault_address: '0x123',
+                chain: chainName === 'Solana' ? 'Solana' : 'Aptos',
                 risk_label: selectedRiskLabel.value as RiskLabel,
                 update_frequency: updateFrequencyInSeconds,
                 policy_prompt: strategyDetails,

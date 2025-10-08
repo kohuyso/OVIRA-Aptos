@@ -1,7 +1,9 @@
+export type NetworkName = 'Aptos' | 'Solana';
+
 export type TWalletStatus = 'Connected' | 'Disconnected' | 'Connecting' | 'Loading' | 'Disconnecting' | 'NotFound' | 'NotInstalled' | 'NotExist' | 'Rejected' | 'Error';
 
-export type TSolanaId = '1' | '56';
-export type TAppChainId = TSolanaId;
+export type TAptosId = '1' | '56';
+export type TAppChainId = TAptosId;
 
 export type SummaryConnectInfo = {
     chainId: string;

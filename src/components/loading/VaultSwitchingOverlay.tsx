@@ -24,3 +24,4 @@ export default function VaultSwitchingOverlay({ children, isVaultSwitching }: Va
         </div>
     );
 }
+

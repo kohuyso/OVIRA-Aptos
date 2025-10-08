@@ -1,7 +1,7 @@
 // Token symbols enum
 export enum TokenSymbol {
-  ETH = "ETH",
+  APT = "APT",
+  BTC = "BTC",
   SOL = "SOL",
-  USDC = "USDC",
-  USDT = "USDT"
+  USDC = "USDC"
 }

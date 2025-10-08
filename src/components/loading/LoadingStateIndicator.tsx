@@ -37,3 +37,4 @@ export default function LoadingStateIndicator({ type = 'default', message, size 
         </Card>
     );
 }
+

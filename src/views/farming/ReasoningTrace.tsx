@@ -9,18 +9,6 @@ import useMarkdownTableStyle from 'src/hooks/useMarkdownStyle/useMarkdownTableSt
 import { capitalizeFirstLetter } from 'src/utils/format';
 import clsx from 'clsx';
 
-const statusColors: Record<string, string> = {
-    FINAL: 'text-blue-600',
-    DRAFT: 'text-yellow-400',
-    FIXED: 'text-green-500',
-    APPROVED: 'text-green-600',
-    REJECTED: 'text-red-600',
-    NEEDS_CHANGES: 'text-orange-600',
-    VERIFIED: 'text-purple-600',
-};
-
-safelist: ['text-blue-600', 'text-yellow-400', 'text-green-500', 'text-green-600', 'text-red-600', 'text-orange-600', 'text-purple-600'];
-
 export default function ReasoningTrace() {
     const { data: traces, status } = useQueryReasoningTrace();
     const { tableStyle } = useMarkdownTableStyle();
