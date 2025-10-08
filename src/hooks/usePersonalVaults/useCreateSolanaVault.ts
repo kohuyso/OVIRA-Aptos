@@ -82,3 +82,4 @@ export default function useCreateSolanaVault(options?: UseCreateSolanaVaultOptio
 
     return { createVaultFn };
 }
+
